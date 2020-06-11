@@ -4,7 +4,7 @@
   <div class="from">
     <div class="fromList fromLine">
       <div class="title">代码：</div>
-      <Select v-model="search" class="select" multiple filterable remote :remote-method="remoteMethod" :loading="loading"  placeholder="代码/拼音/名称">
+      <Select v-model="search" class="select" id="marginTradingSelect" multiple filterable remote :remote-method="remoteMethod" :loading="loading"  placeholder="代码/拼音/名称">
         <Option v-for="item in searchList" :value="item.id" :key="item.id">{{ item.name }}</Option>
       </Select>
     </div>
@@ -14,7 +14,7 @@
         <div>
           <div style="display:flex">
             <img src="../../../assets/addBtn.png" alt="" class="btnImg" @click="addReduceBtnCLick(1)">
-            <Input placeholder="--" style="width: 213px" disabled v-model="list.volume" />
+            <Input placeholder="--" style="width: 213px" disabled v-model="list.volume" id="marginTradingInput"/>
             <img src="../../../assets/reduceBtn.png" alt="" class="btnImg" @click="addReduceBtnCLick(2)">
           </div>
           <div style="width:100%;margin-top:4px">
@@ -30,7 +30,7 @@
         <div>
           <div style="display:flex">
             <img src="../../../assets/addBtn.png" alt="" class="btnImg" @click="addReduceBtnCLick(3)">
-            <Input placeholder="--" style="width: 213px" disabled v-model="list.shares" />
+            <Input placeholder="--" style="width: 213px" disabled v-model="list.shares" id="marginTradingInput"/>
             <img src="../../../assets/reduceBtn.png" alt="" class="btnImg" @click="addReduceBtnCLick(4)">
           </div>
           <div style="width:100%;margin-top:4px">
@@ -141,33 +141,6 @@ export default {
   }
 }
 </script>
-<style lang="less" >
-.ivu-select-selection{
-  background-color: #242C37;
-  border:1px solid rgba(75,86,102,1);
-  border-radius: 0
-}
-.ivu-input{
-  border-radius:0;
-  background-color: #242C37;
-  border:1px solid rgba(75,86,102,1);
-  text-align: center;
-}
-.ivu-input[disabled], fieldset[disabled] .ivu-input{
-  background-color: #242C37;
-}
-.ivu-radio-group-button .ivu-radio-wrapper:last-child{
-  border-radius:0;
-}
-.ivu-radio-group-button .ivu-radio-wrapper:first-child{
-  border-radius:0;
-}
-.ivu-radio-group-button .ivu-radio-wrapper{
-  background-color: #242C37;
-  border:1px solid rgba(75,86,102,1);
-  text-align: center;
-}
-</style>
 <style lang="less" scoped>
 .home{
   width: 359px;

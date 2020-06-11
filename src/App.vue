@@ -61,12 +61,3 @@ html,body {
   color: #2c3e50;
 }
 </style>
-<style>
-.ivu-modal-body{
-  padding: 0;
-}
-.ivu-modal-footer{
-  padding: 0;
-  border-top: 0;
-}
-</style>

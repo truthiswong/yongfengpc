@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <Modal v-model="modal" width="700">
+    <Modal v-model="modal" width="700" id="logoinModal">
       <div class="list" slot="footer">
         <div class="img">
           <img src="../../assets/logo.png" alt="" class="img_logo">
@@ -9,29 +9,46 @@
           <div class="img_title2">让您的投资变得轻松简单 </div>
           <img src="../../assets/logoin_img.png" alt="" class="img_logo1">
         </div>
+        <div class="signIn">
+          <password-login ref="accountLogin" v-show="type == 1" @switchingMode="switchClick"></password-login>
+          <quick-login ref="quickLogin" v-show="type == 2" @switchingMode="switchClick"></quick-login>
+          <forget-password ref="forgetPassword" v-show="type == 3" @switchingMode="switchClick"></forget-password>
+          <register-login ref="register" v-show="type == 4" @switchingMode="switchClick"></register-login>
+        </div>
       </div>
     </Modal>
   </div>
 </template>
 <script>
+import passwordLogin from './signIn/passwordLogin'
+import quickLogin from './signIn/quickLogin'
+import forgetPassword from './signIn/forgetPassword'
+import register from './signIn/register'
 export default {
   name: 'header_top',
-  components: {},
+  components: {
+    'password-login': passwordLogin,
+    'quick-login': quickLogin,
+    'forget-password': forgetPassword,
+    'register-login': register
+  },
   data () {
     return {
-      modal: false
+      modal: false,
+      type: 1
     }
   },
   methods: {
     modalClick(key) {
       this.modal = key
+    },
+    // 切换状态
+    switchClick(key) {
+      console.log(key)
     }
   }
 }
 </script>
-<style>
-
-</style>
 <style lang="less" scoped>
 .list{
   width: 700px;
@@ -84,6 +101,10 @@ export default {
       width: 271px;
       height: 200px;
     }
+  }
+  .signIn{
+    width: 350px;
+    height: 500px;
   }
 }
 </style>
