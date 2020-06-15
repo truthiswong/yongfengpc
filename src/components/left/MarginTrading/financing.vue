@@ -4,8 +4,8 @@
   <div class="from">
     <div class="fromList fromLine">
       <div class="title">代码：</div>
-      <Select v-model="search" id="marginTradingSelect" class="select" multiple filterable remote :remote-method="remoteMethod" :loading="loading"  placeholder="代码/拼音/名称">
-        <Option v-for="item in searchList" :value="item.id" :key="item.id">{{ item.name }}</Option>
+      <Select v-model="search" id="marginTradingSelect" class="select" filterable remote :remote-method="remoteMethod" :loading="loading"  placeholder="代码/拼音/名称" @on-change="stockSearchChange()">
+        <Option v-for="item in searchList" :value="item.code" :key="item.code">{{ item.nameCode }}</Option>
       </Select>
     </div>
     <div class="fromList">
@@ -69,6 +69,8 @@
         <li><div class="text1">买5</div><div class="text2">--</div><div class="text3">--</div></li>
       </ul>
     </div>
+  </div>
+  <div style="position: relative;">
     <div class="transactionBtn">
       <div class="btnFrom">
         <div class="title_text text1">本金 --</div>
@@ -81,12 +83,14 @@
 </div>
 </template>
 <script>
+import { getStockSearch, getStockDetail } from '@/api/api';
 export default {
   data () {
     return {
       search: '', //  搜索内容
       loading: false, // loding
       searchList: [], //  搜索列表
+      code: '', // 搜索选中股票code
       list: {
         volume: '--',
         shares: '--'
@@ -96,15 +100,40 @@ export default {
   methods: {
     // 股票搜索
     remoteMethod(query) {
-      console.log(this);
       if (query !== '') {
         this.loading = true;
-        setTimeout(() => {
+        getStockSearch(query).then(res => {
+          const arr = res.data
+          arr.forEach(v => {
+            v.nameCode = v.name + '(' + v.code + ')'
+          });
+          this.searchList = res.data
           this.loading = false;
-        }, 2000);
+        }).catch(err => {
+          console.log(err);
+          this.$Message.error(err.response.data.message)
+          this.loading = false;
+        })
+        // setTimeout(() => {
+        //   this.loading = false;
+        // }, 2000);
       } else {
         this.searchList = [];
       }
+    },
+    // 选择股票
+    stockSearchChange(key) {
+      this.code = key
+      this.stockDetail()
+    },
+    // 股票详情
+    stockDetail() {
+      getStockDetail(this.code).then(res => {
+        const arr = res.data
+        console.log(arr);
+      }).catch(err => {
+        this.$Message.error(err.response.data.message)
+      })
     },
     addReduceBtnCLick(key) {
       if (key === 1) {
@@ -143,7 +172,8 @@ export default {
 </script>
 <style lang="less" scoped>
 .home{
-  width: 359px;
+  min-width: 359px;
+  width: 100%;
   height: 100%;
   border-left: 1px solid rgba(20,30,40,1);
   border-right: 1px solid rgba(20,30,40,1);
@@ -158,7 +188,8 @@ export default {
 .from{
   position: relative;
   height: calc(100% - 57px);
-  width: 100%;
+  width: 359px;
+  margin: 0 auto;
   padding: 0 10px;
   text-align: left;
   .fromList{
@@ -226,40 +257,40 @@ export default {
   .fromLine{
     line-height: 32px;
   }
-  .transactionBtn{
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width:357px;
-    height:107px;
-    background:rgba(0,0,0,0.18);
-    .btnFrom{
-      width: 100%;
-      height: 100%;
-      position: relative;
-      .text1{
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        color:rgba(131,141,158,1);
-      }
-      .text2{
-        position: absolute;
-        top: 39px;
-        color:rgba(131,141,158,1);
-        left: 20px;
-      }
-      .text3{
-        position: absolute;
-        top: 62px;
-        left: 20px;
-      }
-      .bnt1{
-        position: absolute;
-        right: 15px;
-        bottom: 20px;
-        background: #E33531;
-      }
+}
+.transactionBtn{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width:100%;
+  height:107px;
+  background:rgba(0,0,0,0.18);
+  .btnFrom{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    .text1{
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color:rgba(131,141,158,1);
+    }
+    .text2{
+      position: absolute;
+      top: 39px;
+      color:rgba(131,141,158,1);
+      left: 20px;
+    }
+    .text3{
+      position: absolute;
+      top: 62px;
+      left: 20px;
+    }
+    .bnt1{
+      position: absolute;
+      right: 15px;
+      bottom: 20px;
+      background: #E33531;
     }
   }
 }

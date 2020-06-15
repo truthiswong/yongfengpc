@@ -1,13 +1,13 @@
 <template>
   <div class="structure">
-    <div style="margin:0 auto;display:flex;">
+    <div style="width:100%;display:flex;">
       <div class="assets">
         <div>
           <div class="my">
             <div class="my_title">我的资产</div>
-            <div class="my_CardNumber">
-              <div v-show="!list.type">（亲爱的用户您还没有开户，请前往<span class="opening">开户</span> 吧～）</div>
-              <div v-show="list.type">（开户银行卡 622 **** **** *** 8927）</div>
+            <div class="my_CardNumber" v-show="type==true || type=='true'">
+              <div v-show="assetsList.accountNo==''">（亲爱的用户您还没有开户，请前往<span class="opening">开户</span> 吧～）</div>
+              <div v-show="assetsList.accountNo!=''">（开户银行卡 {{assetsList.accountNo}}）</div>
             </div>
             <div class="my_text1">充值</div>
             <div class="my_text2">提现</div>
@@ -15,27 +15,27 @@
           </div>
           <div class="myDetailed">
             <div class="position">
-              <div class="text"><span>￥</span>{{list.text}}</div>
+              <div class="text"><span>￥</span>{{assetsList.balance}}</div>
               <div class="title">可用余额</div>
             </div>
             <div class="position1">
-              <div class="text"><span>￥</span>{{list.text1}}</div>
+              <div class="text"><span>￥</span>{{assetsList.totalIn}}</div>
               <div class="title">总资产</div>
             </div>
             <div class="position2">
-              <div class="text">{{list.text2}}</div>
+              <div class="text">{{assetsList.hold}}</div>
               <div class="title">持仓单数</div>
             </div>
             <div class="position3">
-              <div class="text">{{list.text3}}</div>
+              <div class="text">{{assetsList.principalNominal}}</div>
               <div class="title">持仓总名义本金</div>
             </div>
             <div class="position4">
-              <div class="text">{{list.text4}}</div>
+              <div class="text">{{assetsList.principalActual}}</div>
               <div class="title">实际本金</div>
             </div>
             <div class="position5">
-              <div :class="Number(list.text5)>0?'text red':'text green'">{{list.text5}}</div>
+              <div :class="Number(assetsList.profit)>0?'text red':'text green'">{{assetsList.profit}}</div>
               <div class="title">盈亏</div>
             </div>
           </div>
@@ -50,10 +50,10 @@
           </div>
           <div class="tab_table">
             <div v-for="(item,index) of capitalList" :key="index" class="tab_table_list">
-              <div class="tab_1">{{item.text}}</div>
-              <div class="tab_2">{{item.text1}}</div>
-              <div class="tab_3">{{item.text2}}</div>
-              <div class="tab_4">{{item.text3}}</div>
+              <div class="tab_1">{{item.time}}</div>
+              <div class="tab_2">{{item.id}}</div>
+              <div class="tab_3">{{item.amount}}</div>
+              <div :class="item.status.name=='交易亏损'?'tab_4 red':'tab_4'">{{item.status.name}}</div>
             </div>
           </div>
         </div>
@@ -80,6 +80,8 @@
 </template>
 
 <script>
+import { getUserIdinfo, getBankDetail, getFundBalance, getCountHold, getPrincipalActual, getPrincipalNominal, getFundLogPage } from '@/api/api';
+import { timeDate2 } from '@/api/account';
 import Financing from './MarginTrading/financing'
 import SecuritiesLending from './MarginTrading/securitiesLending'
 export default {
@@ -87,6 +89,16 @@ export default {
   components: {Financing, SecuritiesLending},
   data () {
     return {
+      type: window.localStorage.getItem('loginType'),
+      assetsList: {
+        accountNo: '-',
+        balance: '-',
+        totalIn: '-',
+        hold: '-',
+        principalNominal: '-',
+        principalActual: '-',
+        profit: '-'
+      },
       list: {
         type: false,
         text: '293872.54',
@@ -96,71 +108,69 @@ export default {
         text4: '22340.52',
         text5: '142382.56'
       },
-      capitalList: [
-        {
-          text: '03-05 10:57',
-          text1: '893274923872',
-          text2: '432.28',
-          text3: '出金完成'
-        },
-        {
-          text: '03-05 10:57',
-          text1: '893274923872',
-          text2: '432.28',
-          text3: '出金完成'
-        },
-        {
-          text: '03-05 10:57',
-          text1: '893274923872',
-          text2: '432.28',
-          text3: '出金完成'
-        },
-        {
-          text: '03-05 10:57',
-          text1: '893274923872',
-          text2: '432.28',
-          text3: '出金完成'
-        },
-        {
-          text: '03-05 10:57',
-          text1: '893274923872',
-          text2: '432.28',
-          text3: '出金完成'
-        },
-        {
-          text: '03-05 10:57',
-          text1: '893274923872',
-          text2: '432.28',
-          text3: '出金完成'
-        },
-        {
-          text: '03-05 10:57',
-          text1: '893274923872',
-          text2: '432.28',
-          text3: '出金完成'
-        },
-        {
-          text: '03-05 10:57',
-          text1: '893274923872',
-          text2: '432.28',
-          text3: '出金完成'
-        },
-        {
-          text: '03-05 10:57',
-          text1: '893274923872',
-          text2: '432.28',
-          text3: '出金完成'
-        },
-        {
-          text: '03-05 10:57',
-          text1: '893274923872',
-          text2: '432.28',
-          text3: '充值失败'
-        }
-      ]
+      capitalList: []
+    }
+  },
+  mounted() {
+    if (this.type === true || this.type === 'true') {
+      this.getList()
+      // this.getUserIdinfoList()
     }
   },
   methods: {
+    getList() {
+      // 银行卡信息
+      getBankDetail().then(res => {
+        this.assetsList.accountNo = res.data.accountNo
+      }).catch(err => {
+        this.$Message.error(err.response.data.message)
+      })
+      // 资产信息
+      getFundBalance().then(res => {
+        const arr = res.data
+        this.assetsList.balance = arr.balance
+        this.assetsList.totalIn = arr.totalIn
+        this.assetsList.profit = (Number(arr.balance) - Number(arr.totalIn)).toFixed(2)
+      }).catch(err => {
+        this.$Message.error(err.response.data.message)
+      })
+      // 持仓数量
+      getCountHold().then(res => {
+        this.assetsList.hold = res.data
+      }).catch(err => {
+        this.$Message.error(err.response.data.message)
+      })
+      // 持仓实际本金
+      getPrincipalActual().then(res => {
+        this.assetsList.principalActual = res.data
+      }).catch(err => {
+        this.$Message.error(err.response.data.message)
+      })
+      // 持仓名义本金
+      getPrincipalNominal().then(res => {
+        this.assetsList.principalNominal = res.data
+      }).catch(err => {
+        this.$Message.error(err.response.data.message)
+      })
+      // 资金明细
+      getFundLogPage().then(res => {
+        const arr = res.data.data
+        arr.forEach(v => {
+          v.time = timeDate2(v.timeCreated)
+        });
+        this.capitalList = arr
+      }).catch(err => {
+        this.$Message.error(err.response.data.message)
+      })
+    },
+    // 我的身份信息
+    getUserIdinfoList() {
+      getUserIdinfo().then(res => {
+        console.log(res);
+      }).catch(err => {
+        this.$Message.error(err.response.data.message)
+      })
+    }
   }
 }
 </script>
@@ -172,7 +182,7 @@ export default {
   // justify-content: center;
 }
 .assets{
-  width: 673px;
+  min-width: 673px;
   height: 100%;
   border-left: 2px solid rgba(20,30,40,1);
   border-right: 2px solid rgba(20,30,40,1);
@@ -309,7 +319,8 @@ export default {
     .tab_2{
       position: absolute;
       top: 5px;
-      right: 420px;
+      // right: 420px;
+      right: 357px;
     }
     .tab_3{
       position: absolute;

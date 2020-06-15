@@ -69,6 +69,8 @@
         <li><div class="text1">买5</div><div class="text2">--</div><div class="text3">--</div></li>
       </ul>
     </div>
+  </div>
+  <div style="position: relative;">
     <div class="transactionBtn">
       <div class="btnFrom">
         <div class="title_text text1">本金 --</div>
@@ -143,7 +145,8 @@ export default {
 </script>
 <style lang="less" scoped>
 .home{
-  width: 359px;
+  min-width: 359px;
+  width: 100%;
   height: 100%;
   border-left: 1px solid rgba(20,30,40,1);
   border-right: 1px solid rgba(20,30,40,1);
@@ -158,7 +161,8 @@ export default {
 .from{
   position: relative;
   height: calc(100% - 57px);
-  width: 100%;
+  width: 359px;
+  margin: 0 auto;
   padding: 0 10px;
   text-align: left;
   .fromList{
@@ -226,40 +230,40 @@ export default {
   .fromLine{
     line-height: 32px;
   }
-  .transactionBtn{
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width:357px;
-    height:107px;
-    background:rgba(0,0,0,0.18);
-    .btnFrom{
-      width: 100%;
-      height: 100%;
-      position: relative;
-      .text1{
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        color:rgba(131,141,158,1);
-      }
-      .text2{
-        position: absolute;
-        top: 39px;
-        color:rgba(131,141,158,1);
-        left: 20px;
-      }
-      .text3{
-        position: absolute;
-        top: 62px;
-        left: 20px;
-      }
-      .bnt1{
-        position: absolute;
-        right: 15px;
-        bottom: 20px;
-        background: #218DF2;
-      }
+}
+.transactionBtn{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width:100%;
+  height:107px;
+  background:rgba(0,0,0,0.18);
+  .btnFrom{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    .text1{
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color:rgba(131,141,158,1);
+    }
+    .text2{
+      position: absolute;
+      top: 39px;
+      color:rgba(131,141,158,1);
+      left: 20px;
+    }
+    .text3{
+      position: absolute;
+      top: 62px;
+      left: 20px;
+    }
+    .bnt1{
+      position: absolute;
+      right: 15px;
+      bottom: 20px;
+      background: #218DF2;
     }
   }
 }

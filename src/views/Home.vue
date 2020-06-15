@@ -28,6 +28,13 @@ export default {
       searchList: []//  搜索列表
     }
   },
+  mounted() {
+    if (window.localStorage.getItem('token') === null || window.localStorage.getItem('token') === undefined) {
+      window.localStorage.setItem('loginType', false)
+    } else {
+      window.localStorage.setItem('loginType', true)
+    }
+  },
   methods: {
     getLogoin() {
       this.$refs.logoin.modalClick(true)

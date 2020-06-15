@@ -3,9 +3,23 @@
     <Select v-model="search" class="top_tab_search" multiple filterable remote :remote-method="remoteMethod" :loading="loading" size="small" placeholder="代码/拼音/名称">
       <Option v-for="item in searchList" :value="item.id" :key="item.id">{{ item.name }}</Option>
     </Select>
-    <div class="logoin cursor" @click="logoin">
+    <div class="logoin cursor" @click="logoin" v-show="type == false || type == 'false'">
       <img src="../assets/headIcon.png" alt="" class="headIcon">
       <span>登陆</span>
+    </div>
+    <div class="login1" v-show="type == true || type == 'true'">
+      <div class="cursor" style="margin-right:16px">
+        <img src="../assets/feedback.png" alt="" style="width:14px;height:15px">
+        <span>反馈</span>
+      </div>
+      <div class="cursor" style="margin-right:16px">
+        <img src="../assets/news.png" alt="" style="width:14px;height:11px">
+        <span>消息</span>
+      </div>
+      <div class="cursor">
+        <img src="../assets/setUp.png" alt="" style="width:14px;height:14px">
+        <span>设置</span>
+      </div>
     </div>
   </div>
 </template>
@@ -17,6 +31,7 @@ export default {
   data () {
     return {
       search: '', //  搜索内容
+      type: window.localStorage.getItem('loginType'),
       loading: false, // loding
       searchList: []//  搜索列表
     }
@@ -55,7 +70,7 @@ export default {
     border-bottom: 2px solid #141E28;
     line-height: 37px;
     text-align: left;
-    z-index: 99999;
+    z-index: 888;
     // padding-right: 49px;
     .top_tab_search{
       width: 221px;
@@ -80,5 +95,27 @@ export default {
     margin-top: 9px;
     width: 20px;
     height: 20px;
+  }
+  .login1{
+    width: 170px;
+    position: absolute;
+    top: 0;
+    right: 10px;
+    height: 100%;
+    display: flex;
+    font-size:12px;
+    font-family:PingFangSC-Medium,PingFang SC;
+    font-weight:500;
+    color:rgba(221,221,221,1);
+    div{
+      align-items: center;
+      display: flex;
+    }
+    img{
+      align-items: center;
+    }
+    span{
+      margin-left: 8px;
+    }
   }
 </style>

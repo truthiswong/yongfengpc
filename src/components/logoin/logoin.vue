@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <Modal v-model="modal" width="700" id="logoinModal">
+    <Modal v-model="modal" width="700" id="logoinModal" :mask-closable='false' @on-visible-change="visibleChange">
       <div class="list" slot="footer">
         <div class="img">
           <img src="../../assets/logo.png" alt="" class="img_logo">
@@ -10,7 +10,7 @@
           <img src="../../assets/logoin_img.png" alt="" class="img_logo1">
         </div>
         <div class="signIn">
-          <password-login ref="accountLogin" v-show="type == 1" @switchingMode="switchClick"></password-login>
+          <password-login ref="accountLogin" v-show="type == 1" @switchingMode="switchClick" @loginSuccess="getLoginSuccess"></password-login>
           <quick-login ref="quickLogin" v-show="type == 2" @switchingMode="switchClick"></quick-login>
           <forget-password ref="forgetPassword" v-show="type == 3" @switchingMode="switchClick"></forget-password>
           <register-login ref="register" v-show="type == 4" @switchingMode="switchClick"></register-login>
@@ -44,7 +44,16 @@ export default {
     },
     // 切换状态
     switchClick(key) {
-      console.log(key)
+      this.type = key
+    },
+    getLoginSuccess() {
+      this.modal = false
+    },
+    visibleChange(key) {
+      if (key === false) {
+        this.$refs.accountLogin.emptyData()
+        this.$refs.register.emptyData()
+      }
     }
   }
 }

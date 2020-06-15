@@ -18,11 +18,11 @@
         <span class="range">涨跌幅</span>
       </div>
       <ul class="optional_list">
-        <li v-for="item of optionalList" :key="item.id" :class="optionalId==item.id?'optional_list_bule':''" @click="optionalId=item.id">
+        <li v-for="item of optionalList" :key="item.code" :class="optionalId==item.code?'optional_list_bule':''" @click="optionalId=item.code">
           <span class="name">{{item.name}}</span>
           <span class="code">{{item.code}}</span>
-          <span class="price">{{item.price}}</span>
-          <span :class="item.range>=0?'range red':'range green'">{{item.range>=0?'+':''}}{{item.range}}%</span>
+          <span class="price">{{item.nowPrice}}</span>
+          <span :class="item.diff_rate>0?'range red':'range green'">{{item.diff_rate>0?'+':''}}{{item.diff_rate}}%</span>
         </li>
       </ul>
     </div>
@@ -189,28 +189,15 @@
 </template>
 
 <script>
+import { getStockPrice } from '@/api/api';
 export default {
   name: 'menuLift',
   components: {},
   data () {
     return {
       optionalTab: true,
-      optionalId: '1',
+      optionalId: '',
       optionalList: [
-        {
-          id: '1',
-          name: '菲达环保',
-          code: '600526',
-          price: '5.66',
-          range: 3.08
-        },
-        {
-          id: '2',
-          name: '中央商场',
-          code: '600526',
-          price: '5.66',
-          range: -3.08
-        }
       ],
       stockBasis: {
         name: '菲达环保',
@@ -221,7 +208,19 @@ export default {
       }
     }
   },
+  mounted() {
+    this.getStockPriceList()
+  },
   methods: {
+    // 自选列表
+    getStockPriceList() {
+      getStockPrice().then(res => {
+        const arr = res.data
+        this.optionalList = arr
+      }).catch(err => {
+        this.$Message.error(err.response.data.message)
+      })
+    }
   }
 }
 </script>

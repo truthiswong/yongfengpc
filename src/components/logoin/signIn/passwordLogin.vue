@@ -3,31 +3,40 @@
     <div class="list list1">
       <span class="cursor">手机登录</span>
       <div class="line"></div>
-      <span style="color:rgba(204,204,204,1);" class="cursor">快捷登录</span>
+      <span style="color:rgba(204,204,204,1);" class="cursor" @click="quickLogoin">快捷登录</span>
     </div>
     <div class="title_text list list2">
       <div class="title">手机号</div>
-      <Input placeholder="请输入手机号码" style="width: 220px" />
+      <Input placeholder="请输入手机号码" style="width: 220px"  v-model="list.account"/>
     </div>
     <div class="title_text list list3">
       <div class="title">密码</div>
-      <Input placeholder="请输入密码" type="password" style="width: 220px" />
+      <Input placeholder="请输入密码" type="password" style="width: 220px" v-model="list.password"/>
     </div>
-    <div class="list list4">
+    <!-- <div class="list list4">
       <Checkbox>自动登录</Checkbox>
-    </div>
+    </div> -->
     <div class="list list5">
-      <Button type="error" style="width:220px;" :loading="loading" @click="logoinLoading">立即登录</Button>
+      <Button type="error" style="width:220px;" :loading="loading" @click="logoinClick">立即登录</Button>
+    </div>
+    <div class="list list6">
+      <span class="cursor" @click="typeClick(4)">立即注册</span>
     </div>
   </div>
 </template>
 <script>
+import { getLogin } from '@/api/api';
 export default {
   name: 'passwordLogin',
   components: {},
   data () {
     return {
-      loading: false
+      loading: false,
+      list: {
+        account: '',
+        password: '',
+        profile: 'type:user'
+      }
     }
   },
   methods: {
@@ -35,7 +44,35 @@ export default {
       this.loading = true;
     },
     typeClick(key) {
-      this.$emit('switchingMode', '1')
+      this.$emit('switchingMode', key)
+    },
+    logoinClick() {
+      this.loading = true
+      if (this.list.account === '') {
+        this.$Message.error('请输入手机号');
+        this.loading = false
+      } else if (this.list.password === '') {
+        this.$Message.error('请输入密码');
+        this.loading = false
+      } else {
+        getLogin(this.list).then(res => {
+          this.$Message.success('登录成功');
+          window.localStorage.setItem('token', 'Bearer ' + res.data.token)
+          this.emptyData()
+          this.$emit('loginSuccess', '1')
+        }).catch(err => {
+          this.$Message.error(err.response.data.message)
+          this.loading = false
+        })
+      }
+    },
+    emptyData() {
+      this.list.account = ''
+      this.list.password = ''
+      this.loading = false
+    },
+    quickLogoin() {
+      this.$Message.error('暂不可用');
     }
   }
 }
@@ -76,6 +113,13 @@ export default {
   }
   .list5{
     top: 287px;
+  }
+  .list6{
+    top: 335px;
+    font-size:12px;
+    font-family:PingFangSC-Regular,PingFang SC;
+    font-weight:400;
+    color:rgba(50,50,50,1);
   }
   .title{
     color:rgba(50,50,50,1);

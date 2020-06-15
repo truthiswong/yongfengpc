@@ -26,7 +26,7 @@ export default {
   left: 49px;
   background:rgba(35,44,55,1);
   right: 0;
-  z-index: 99999;
+  z-index: 888;
   border-top: 2px solid rgba(20,30,40,1)
 }
 </style>
