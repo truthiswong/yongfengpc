@@ -63,13 +63,18 @@ service.interceptors.response.use(
   },
   error => {
     if (error && error.response) {
+      console.log(error);
       if (error.response.status === 401) {
         // // 跳转路由
         // router.push({
         //   name: 'login'
         // });
+        var loginType = window.localStorage.getItem('loginType')
         window.localStorage.setItem('loginType', false)
         window.localStorage.setItem('token', null)
+        if (loginType === true || loginType === 'true') {
+          window.location.reload()
+        }
       }
       switch (error.response.status) {
       case 400: error.message = '请求错误'; break;

@@ -7,10 +7,10 @@
             <div class="my_title">我的资产</div>
             <div class="my_CardNumber" v-show="type==true || type=='true'">
               <div v-show="assetsList.accountNo==''">（亲爱的用户您还没有开户，请前往<span class="opening">开户</span> 吧～）</div>
-              <div v-show="assetsList.accountNo!=''">（开户银行卡 {{assetsList.accountNo}}）</div>
+              <div v-show="assetsList.accountNo!=''" class="cursor" @click="accountInfoCLick">（开户银行卡 {{assetsList.accountNo}}）</div>
             </div>
-            <div class="my_text1">充值</div>
-            <div class="my_text2">提现</div>
+            <div class="my_text1" @click="withdrawalRechargeClick(1)">充值</div>
+            <div class="my_text2" @click="withdrawalRechargeClick(2)">提现</div>
             <img src="../../assets/setUp.png" alt="" class="my_img">
           </div>
           <div class="myDetailed">
@@ -73,8 +73,12 @@
           </div>
         </div>
       </div>
-      <Financing></Financing>
-      <SecuritiesLending></SecuritiesLending>
+      <Financing ref="financing" @securitiesLendingFinancing="rechargeWithdrawalRefresh"></Financing>
+      <SecuritiesLending ref="securitiesLending" @securitiesLendingFinancing="rechargeWithdrawalRefresh"></SecuritiesLending>
+      <Recharge ref="recharge" @rechargeWithdrawal="rechargeWithdrawalRefresh"></Recharge>
+      <Withdrawal ref="withdrawal" @rechargeWithdrawal="rechargeWithdrawalRefresh"></Withdrawal>
+      <AccountInfo ref="accountInfo" @modifyAccountInfo="modifyAccountInfoChange"></AccountInfo>
+      <AccountInfoModify ref="accountInfoModify" ></AccountInfoModify>
     </div>
   </div>
 </template>
@@ -82,11 +86,15 @@
 <script>
 import { getUserIdinfo, getBankDetail, getFundBalance, getCountHold, getPrincipalActual, getPrincipalNominal, getFundLogPage } from '@/api/api';
 import { timeDate2 } from '@/api/account';
-import Financing from './MarginTrading/financing'
-import SecuritiesLending from './MarginTrading/securitiesLending'
+import Financing from './MarginTrading/financing' // 融资
+import SecuritiesLending from './MarginTrading/securitiesLending' // 融券
+import Recharge from './rechargeWithdrawal/recharge' // 充值
+import Withdrawal from './rechargeWithdrawal/withdrawal' // 提现
+import AccountInfo from './accountOpening/accountInfo' // 提现
+import AccountInfoModify from './accountOpening/accountInfoModify' // 修改开户信息
 export default {
   name: 'menuLift',
-  components: {Financing, SecuritiesLending},
+  components: {Financing, SecuritiesLending, Recharge, Withdrawal, AccountInfo, AccountInfoModify},
   data () {
     return {
       type: window.localStorage.getItem('loginType'),
@@ -99,19 +107,12 @@ export default {
         principalActual: '-',
         profit: '-'
       },
-      list: {
-        type: false,
-        text: '293872.54',
-        text1: '142382.56',
-        text2: '3',
-        text3: '23820.74',
-        text4: '22340.52',
-        text5: '142382.56'
-      },
       capitalList: []
     }
   },
   mounted() {
+    this.$refs.financing.ascriptionTypeClick(1)
+    this.$refs.securitiesLending.ascriptionTypeClick(1)
     if (this.type === true || this.type === 'true') {
       this.getList()
       // this.getUserIdinfoList()
@@ -170,6 +171,42 @@ export default {
       }).catch(err => {
         this.$Message.error(err.response.data.message)
       })
+    },
+    // 提现
+    withdrawalRechargeClick(key) {
+      if (this.type === true || this.type === 'true') {
+        if (this.assetsList.accountNo !== '') {
+          if (key === 1) {
+            this.$refs.recharge.getList()
+          } else {
+            this.$refs.withdrawal.getList(this.assetsList.accountNo, this.assetsList.balance)
+          }
+        } else {
+          this.$Message.error('您未开户，请开户！')
+        }
+      } else {
+        this.$Message.error('您未登录，请登录！')
+      }
+    },
+    // 修改开户信息
+    modifyAccountInfoChange(key) {
+      if (this.type === true || this.type === 'true') {
+        this.$refs.accountInfoModify.getList(key)
+      } else {
+        this.$Message.error('您未登录，请登录！')
+      }
+    },
+    // 开户信息弹窗
+    accountInfoCLick() {
+      if (this.type === true || this.type === 'true') {
+        this.$refs.accountInfo.getList()
+      } else {
+        this.$Message.error('您未登录，请登录！')
+      }
+    },
+    // 提现充值成功刷新数据列表
+    rechargeWithdrawalRefresh(key) {
+      this.getList()
     }
   }
 }

@@ -28,6 +28,10 @@ html,body {
 .cursor{
   cursor: pointer
 }
+.flex_space-between{
+  display:flex;
+  justify-content:space-between
+}
 .title_text{
   font-size:12px;
   font-family:PingFangSC-Regular,PingFang SC;

@@ -7,22 +7,20 @@
       <div class="tabTitle4 top3">操作</div>
       <div class="tabTitle5 top3">委托价格</div>
       <div class="tabTitle6 top3">委托数量</div>
-      <div class="tabTitle7 top3">备注</div>
-      <div class="tabTitle8 top3">成交均价</div>
-      <div class="tabTitle9 top3">成交数量</div>
+      <div class="tabTitle8 top3">当前价</div>
+      <div class="tabTitle9 top3">实际盈亏</div>
     </div>
     <div class="tableList">
       <ul>
-        <li v-for="(item,index) of list" :key="index" :class="item.code=='买多'?'tabred cursor tabLi':'bule cursor tabLi'">
-          <div class="tabTitle1 top5"></div>
-          <div class="tabTitle2 top5"></div>
-          <div class="tabTitle3 top5"></div>
-          <div class="tabTitle4 top5">{{item.code}}</div>
-          <div class="tabTitle5 top5"></div>
-          <div class="tabTitle6 top5"></div>
-          <div class="tabTitle7 top5"></div>
-          <div class="tabTitle8 top5"></div>
-          <div class="tabTitle9 top5"></div>
+        <li v-for="(item,index) of list" :key="index" :class="item.type.name=='买多'?'tabred cursor tabLi':'bule cursor tabLi'">
+          <div class="tabTitle1 top5">{{item.stockCode}}</div>
+          <div class="tabTitle2 top5">{{item.sotckName}}</div>
+          <div class="tabTitle3 top5">{{item.timeCreated}}</div>
+          <div class="tabTitle4 top5">{{item.type.name}}</div>
+          <div class="tabTitle5 top5">{{item.price}}</div>
+          <div class="tabTitle6 top5">{{item.volume}}</div>
+          <div class="tabTitle8 top5">{{item.nowPrice}}</div>
+          <div :class="Number(item.nowProfitLoss)>0?'tabTitle9 top5 red':'tabTitle9 top5 green'">{{item.nowProfitLoss}}</div>
         </li>
       </ul>
     </div>
@@ -30,46 +28,35 @@
 </template>
 
 <script>
+import { getExchangeList } from '@/api/api';
+import { timeDate2 } from '@/api/account';
 export default {
   name: 'entrust',
   components: {},
   data () {
     return {
-      list: [
-        {
-          code: '买多'
-        },
-        {
-          code: '买多'
-        },
-        {
-          code: '买少'
-        },
-        {
-          code: '买少'
-        },
-        {
-          code: '买少'
-        },
-        {
-          code: '买多'
-        },
-        {
-          code: '买多'
-        },
-        {
-          code: '买多'
-        },
-        {
-          code: '买多'
-        },
-        {
-          code: '买多'
-        }
-      ]
+      list: []
     }
   },
+  mounted() {
+    this.getList()
+  },
   methods: {
+    getList() {
+      const data = {
+        status: 'close',
+        pageSize: '100',
+        pageNo: '1'
+      }
+      getExchangeList(data).then(res => {
+        const arr = res.data.data
+        arr.forEach(v => {
+          v.closeTime = timeDate2(v.closeTime)
+          v.timeCreated = timeDate2(v.timeCreated)
+        });
+        this.list = arr
+      })
+    }
   }
 }
 </script>
@@ -121,23 +108,23 @@ ul::-webkit-scrollbar {
 }
 .tabTitle3{
   position: absolute;
-  left: 162px;
+  left: 220px;
 }
 .tabTitle4{
   position: absolute;
-  left: 245px;
+  left: 325px;
 }
 .tabTitle5{
   position: absolute;
-  left: 302px;
+  left: 382px;
 }
 .tabTitle6{
   position: absolute;
-  right: 233px;
+  right: 163px;
 }
 .tabTitle7{
   position: absolute;
-  right: 177px;
+  right: 150px;
 }
 .tabTitle8{
   position: absolute;

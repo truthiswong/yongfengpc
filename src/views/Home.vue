@@ -9,17 +9,19 @@
       </div>
     </div>
     <Logoin ref="logoin"></Logoin>
+    <SetUp ref="setUp"></SetUp>
   </div>
 </template>
 
 <script>
 import Logoin from '../components/logoin/logoin'
+import SetUp from '../components/topModal/setUp' // 设置弹窗
 import HeaderTop from '../components/HeaderTop'
 import MenuLeft from '../components/MenuLeft'
 import HeaderBottom from '../components/HeaderBottom'
 export default {
   name: 'Home',
-  components: {MenuLeft, HeaderTop, HeaderBottom, Logoin},
+  components: {MenuLeft, HeaderTop, HeaderBottom, Logoin, SetUp},
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
@@ -29,16 +31,20 @@ export default {
     }
   },
   mounted() {
-    if (window.localStorage.getItem('token') === null || window.localStorage.getItem('token') === undefined) {
+    if (window.localStorage.getItem('token') == "null" || window.localStorage.getItem('token') == null || window.localStorage.getItem('token') == undefined) {
       window.localStorage.setItem('loginType', false)
     } else {
       window.localStorage.setItem('loginType', true)
     }
   },
   methods: {
-    getLogoin() {
-      this.$refs.logoin.modalClick(true)
-      console.log(1)
+    getLogoin(key) {
+      if (key == '1' || key == 1) {
+        this.$refs.logoin.modalClick(true)
+      } else if (key == '2' || key == 2) {
+        this.$refs.setUp.getList()
+      }
+      
     }
   }
 }

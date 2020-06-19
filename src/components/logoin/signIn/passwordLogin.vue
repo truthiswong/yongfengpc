@@ -58,8 +58,10 @@ export default {
         getLogin(this.list).then(res => {
           this.$Message.success('登录成功');
           window.localStorage.setItem('token', 'Bearer ' + res.data.token)
+          window.localStorage.setItem('loginType', true)
           this.emptyData()
           this.$emit('loginSuccess', '1')
+          window.location.reload()
         }).catch(err => {
           this.$Message.error(err.response.data.message)
           this.loading = false

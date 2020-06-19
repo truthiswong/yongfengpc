@@ -1,10 +1,12 @@
 <template>
 <div class="home">
-  <div class="home_title title_text14500">融资（多）</div>
+  <div class="home_title title_text14500">融资（多）
+    <img src="../../../assets/fork.png" alt="" style="width:12px;height:12px;float: right;margin-top: 5px;" v-show="ascriptionType == 2" @click="returnClick">
+  </div>
   <div class="from">
     <div class="fromList fromLine">
       <div class="title">代码：</div>
-      <Select v-model="search" id="marginTradingSelect" class="select" filterable remote :remote-method="remoteMethod" :loading="loading"  placeholder="代码/拼音/名称" @on-change="stockSearchChange()">
+      <Select v-model="search" id="marginTradingSelect" class="select" filterable remote :remote-method="remoteMethod" :loading="loading"  placeholder="代码/拼音/名称" @on-change="stockSearchChange">
         <Option v-for="item in searchList" :value="item.code" :key="item.code">{{ item.nameCode }}</Option>
       </Select>
     </div>
@@ -14,12 +16,12 @@
         <div>
           <div style="display:flex">
             <img src="../../../assets/addBtn.png" alt="" class="btnImg" @click="addReduceBtnCLick(1)">
-            <Input placeholder="--" style="width: 213px" disabled v-model="list.volume" id="marginTradingInput"/>
+            <Input placeholder="--" style="width: 213px" disabled v-model="sharesDetail.nowPrice" id="marginTradingInput"/>
             <img src="../../../assets/reduceBtn.png" alt="" class="btnImg" @click="addReduceBtnCLick(2)">
           </div>
           <div style="width:100%;margin-top:4px">
-            <div class="title" style="float: left;text-align: left;width:100px">跌停：<span class="green">--</span></div>
-            <div class="title" style="float: right;width:80px">涨停：<span class="red">--</span></div>
+            <div class="title" style="float: left;text-align: left;width:100px">跌停：<span class="green">{{sharesDetail.highLimit}}</span></div>
+            <div class="title" style="float: right;width:80px">涨停：<span class="red">{{sharesDetail.downLimit}}</span></div>
           </div>
         </div>
       </div>
@@ -30,19 +32,19 @@
         <div>
           <div style="display:flex">
             <img src="../../../assets/addBtn.png" alt="" class="btnImg" @click="addReduceBtnCLick(3)">
-            <Input placeholder="--" style="width: 213px" disabled v-model="list.shares" id="marginTradingInput"/>
+            <Input placeholder="--" style="width: 213px" disabled v-model="share1" id="marginTradingInput" @on-change="sharesChange"/>
             <img src="../../../assets/reduceBtn.png" alt="" class="btnImg" @click="addReduceBtnCLick(4)">
           </div>
           <div style="width:100%;margin-top:4px">
-            <RadioGroup type="button" id="marginTradingRadioGroup">
-              <Radio label="1/2" style="width:86px;margin-right:10px"></Radio>
-              <Radio label="1/3" style="width:86px;margin-right:9px"></Radio>
-              <Radio label="全部" style="width:86px"></Radio>
+            <RadioGroup type="button" id="marginTradingRadioGroup" v-model="btn_num" @on-change="radioGroupChange">
+              <Radio label="third" style="width:86px;margin-right:10px">1/3</Radio>
+              <Radio label="half" style="width:86px;margin-right:9px">1/2</Radio>
+              <Radio label="all" style="width:86px">全部</Radio>
             </RadioGroup>
           </div>
           <div style="width:100%;margin-top:4px">
-            <div class="title" style="float: left;text-align: left;width:50%">可买份额：<span class="orange">--</span></div>
-            <div class="title" style="float: right;width:50%">开仓市值：<span class="orange">--</span></div>
+            <div class="title" style="float: left;text-align: left;width:50%">可买份额：<span class="orange">{{share}}</span></div>
+            <div class="title" style="float: right;width:50%">开仓市值：<span class="orange">{{enteringValue}}</span></div>
           </div>
         </div>
       </div>
@@ -57,47 +59,102 @@
     <div class="fromList" style="display:flex">
       <div class="title">买卖盘口：</div>
       <ul class="businessList">
-        <li><div class="text1">卖5</div><div class="text2">--</div><div class="text3">--</div></li>
-        <li><div class="text1">卖4</div><div class="text2">--</div><div class="text3">--</div></li>
-        <li><div class="text1">卖3</div><div class="text2">--</div><div class="text3">--</div></li>
-        <li><div class="text1">卖2</div><div class="text2">--</div><div class="text3">--</div></li>
-        <li class="bodertext"><div class="text1">卖1</div><div class="text2">--</div><div class="text3">--</div></li>
-        <li style="margin-top:3px"><div class="text1">买1</div><div class="text2">--</div><div class="text3">--</div></li>
-        <li><div class="text1">买2</div><div class="text2">--</div><div class="text3">--</div></li>
-        <li><div class="text1">买3</div><div class="text2">--</div><div class="text3">--</div></li>
-        <li><div class="text1">买4</div><div class="text2">--</div><div class="text3">--</div></li>
-        <li><div class="text1">买5</div><div class="text2">--</div><div class="text3">--</div></li>
+        <li><div class="text1">卖5</div><div class="text2">{{sharesDetail.buy5_m}}</div><div class="text3">{{sharesDetail.buy5_n}}</div></li>
+        <li><div class="text1">卖4</div><div class="text2">{{sharesDetail.buy4_m}}</div><div class="text3">{{sharesDetail.buy4_n}}</div></li>
+        <li><div class="text1">卖3</div><div class="text2">{{sharesDetail.buy3_m}}</div><div class="text3">{{sharesDetail.buy3_n}}</div></li>
+        <li><div class="text1">卖2</div><div class="text2">{{sharesDetail.buy2_m}}</div><div class="text3">{{sharesDetail.buy2_n}}</div></li>
+        <li class="bodertext"><div class="text1">卖1</div><div class="text2">{{sharesDetail.buy1_m}}</div><div class="text3">{{sharesDetail.buy1_n}}</div></li>
+        <li style="margin-top:3px"><div class="text1">买1</div><div class="text2">{{sharesDetail.sell1_m}}</div><div class="text3">{{sharesDetail.sell1_n}}</div></li>
+        <li><div class="text1">买2</div><div class="text2">{{sharesDetail.sell2_m}}</div><div class="text3">{{sharesDetail.sell2_n}}</div></li>
+        <li><div class="text1">买3</div><div class="text2">{{sharesDetail.sell3_m}}</div><div class="text3">{{sharesDetail.sell3_n}}</div></li>
+        <li><div class="text1">买4</div><div class="text2">{{sharesDetail.sell4_m}}</div><div class="text3">{{sharesDetail.sell4_n}}</div></li>
+        <li><div class="text1">买5</div><div class="text2">{{sharesDetail.sell5_m}}</div><div class="text3">{{sharesDetail.sell5_n}}</div></li>
       </ul>
     </div>
   </div>
   <div style="position: relative;">
     <div class="transactionBtn">
       <div class="btnFrom">
-        <div class="title_text text1">本金 --</div>
-        <div class="title_text text2">服务费 --</div>
-        <div class="title_text14500 text3">需支付：--元</div>
-        <Button type="error" class="bnt1">融资(多)</Button>
+        <div class="title_text text1">本金 {{list.principal}}</div>
+        <div class="title_text text2">服务费 {{list.serviceCharge}}</div>
+        <div class="title_text14500 text3">需支付：{{list.payment}}元</div>
+        <Button type="error" class="bnt1" :disabled="confirm" :loading="btnloading" @click="btnEntrust">融资(多)</Button>
       </div>
     </div>
   </div>
 </div>
 </template>
 <script>
-import { getStockSearch, getStockDetail } from '@/api/api';
+import { getStockSearch, getStockDetail, getExchangeVolume, getExchangeCommission, getExchangeEntrust } from '@/api/api';
 export default {
   data () {
     return {
       search: '', //  搜索内容
+      btn_num: 'all', // 份额
       loading: false, // loding
+      btnloading: false, // 购买股票lod
+      confirm: true, // 购买禁用
       searchList: [], //  搜索列表
+      sharesDetail: {
+        highLimit: '--',
+        downLimit: '--',
+        nowPrice: ''
+      }, // 股票详情
       code: '', // 搜索选中股票code
+      share: 0, // 可买份额
+      share1: '0',
+      enteringValue: '', // 开仓市值
       list: {
-        volume: '--',
-        shares: '--'
-      }
+        shares: '--',
+        principal: '--',
+        payment: '--',
+        serviceCharge: '--',
+        buy1_m: '--',
+        buy2_m: '--',
+        buy3_m: '--',
+        buy4_m: '--',
+        buy5_m: '--',
+        sell1_m: '--',
+        sell2_m: '--',
+        sell3_m: '--',
+        sell4_m: '--',
+        sell5_m: '--',
+        buy1_n: '--',
+        buy2_n: '--',
+        buy3_n: '--',
+        buy4_n: '--',
+        buy5_n: '--',
+        sell1_n: '--',
+        sell2_n: '--',
+        sell3_n: '--',
+        sell4_n: '--',
+        sell5_n: '--'
+      },
+      ascriptionType: null
     }
   },
   methods: {
+    // 判断组件归属页面
+    ascriptionTypeClick(key) {
+      this.ascriptionType = key
+    },
+    // 个股股票选择
+    getList(code){
+      this.ascriptionType = 2
+      getStockSearch(code).then(res => {
+        const arr = res.data
+        arr.forEach(v => {
+          v.nameCode = v.name + '(' + v.code + ')'
+        });
+        this.searchList = res.data
+        this.search = code
+        this.stockSearchChange(code)
+        this.loading = false;
+      }).catch(err => {
+        this.$Message.error(err.response.data.message)
+        this.loading = false;
+      })
+    },
     // 股票搜索
     remoteMethod(query) {
       if (query !== '') {
@@ -124,14 +181,102 @@ export default {
     // 选择股票
     stockSearchChange(key) {
       this.code = key
-      this.stockDetail()
+      this.stockDetail('1')
     },
     // 股票详情
-    stockDetail() {
+    stockDetail(key) {
       getStockDetail(this.code).then(res => {
         const arr = res.data
+        this.sharesDetail = arr
+        this.tradingVolume(key)
         console.log(arr);
       }).catch(err => {
+        this.$Message.error(err.response.data.message)
+      })
+    },
+    // 交易量计算
+    tradingVolume(add) {
+      const data = {
+        positions: this.btn_num,
+        type: 'loanCapital',
+        entrustPrice: this.sharesDetail.nowPrice,
+        leverFold: '10'
+      }
+      getExchangeVolume(data).then(res => {
+        if (add === '1') {
+          this.share1 = res.data
+          this.enteringValue = (Number(res.data) * Number(this.sharesDetail.nowPrice)).toFixed(0)
+          this.list.principal = ((Number(res.data) * Number(this.sharesDetail.nowPrice)) / 10).toFixed(0)
+          this.commission()
+        } else {
+          this.enteringValue = (Number(this.share1) * Number(this.sharesDetail.nowPrice)).toFixed(0)
+          this.list.principal = (Number(this.enteringValue) / 10).toFixed(2)
+          this.commission()
+        }
+        this.share = res.data
+        if (Number(this.share1) >= 10000) {
+          this.confirm = false
+        } else {
+          this.confirm = true
+        }
+      }).catch(err => {
+        console.log(err)
+        this.$Message.error('请先选择股票')
+      })
+    },
+    // 佣金手续费
+    commission() {
+      const data = {
+        volume: parseInt(this.share1),
+        type: 'loanCapital',
+        entrustPrice: this.sharesDetail.nowPrice,
+        leverFold: '10'
+      }
+      getExchangeCommission(data).then(res => {
+        this.list.serviceCharge = res.data.charge
+        this.list.payment = (Number(this.list.principal) + Number(this.list.serviceCharge)).toFixed(0)
+      }).catch(err => {
+        console.log(err)
+        this.$Message.error('请先选择股票')
+      })
+    },
+    // 数量选择
+    radioGroupChange(key) {
+      this.btn_num = key
+      this.tradingVolume('1')
+    },
+    // 交易股数
+    sharesChange(key) {
+      // this.share1 = key
+      if (Number(this.share1) >= 10000) {
+        this.confirm = false
+      } else {
+        this.confirm = true
+      }
+      this.enteringValue = (Number(this.share1) * Number(this.sharesDetail.nowPrice)).toFixed(0)
+      this.list.principal = (Number(this.enteringValue) / 10).toFixed(2)
+      this.commission()
+    },
+    // 购买股票
+    btnEntrust() {
+      this.btnloading = true
+      const data = {
+        stockCode: this.sharesDetail.code,
+        entrustPrice: this.sharesDetail.nowPrice,
+        type: 'loanCapital',
+        volume: parseInt(this.share1),
+        leverFold: '10'
+      }
+      getExchangeEntrust(data).then(res => {
+        this.btnloading = false
+        this.$Message.success('购买成功')
+        if (this.ascriptionType === 1 || this.ascriptionType === '1') {
+          this.$emit('securitiesLendingFinancing', '1')
+        } else if (this.ascriptionType === 2 || this.ascriptionType === '2') {
+          this.$emit('securitiesLendingFinancing', '1')
+        }
+      }).catch(err => {
+        this.btnloading = false
         this.$Message.error(err.response.data.message)
       })
     },
@@ -152,21 +297,27 @@ export default {
           this.list.volume = (Number(this.list.volume) + 0.01).toFixed(2)
         }
       } else if (key === 3) {
-        if (this.list.shares <= '1000') {
-          this.list.shares = '0'
-        } if (this.list.shares > '1000') {
-          this.list.shares -= '1000'
-        } if (this.list.shares === '--') {
-          this.list.shares = '0'
+        if (this.share1 <= '1000') {
+          this.share1 = '0'
+        } if (this.share1 > '1000') {
+          this.share1 -= '1000'
+        } if (this.share1 === '--') {
+          this.share1 = '0'
         }
+        this.tradingVolume()
       } else if (key === 4) {
-        if (this.list.shares === '--') {
-          this.list.shares = '1000'
+        if (this.share1 === '--') {
+          this.share1 = '1000'
         } else {
-          this.list.shares = parseInt(this.list.shares) + 1000
+          this.share1 = parseInt(this.share1) + 1000
         }
+        this.tradingVolume()
       }
-    }
+    },
+    // 返回
+    returnClick() {
+      this.$emit('securitiesLendingFinancing', '1')
+    },
   }
 }
 </script>
@@ -290,7 +441,7 @@ export default {
       position: absolute;
       right: 15px;
       bottom: 20px;
-      background: #E33531;
+      // background: #E33531;
     }
   }
 }

@@ -3,7 +3,7 @@
     <Select v-model="search" class="top_tab_search" multiple filterable remote :remote-method="remoteMethod" :loading="loading" size="small" placeholder="代码/拼音/名称">
       <Option v-for="item in searchList" :value="item.id" :key="item.id">{{ item.name }}</Option>
     </Select>
-    <div class="logoin cursor" @click="logoin" v-show="type == false || type == 'false'">
+    <div class="logoin cursor" @click="logoin('1')" v-show="type == false || type == 'false'">
       <img src="../assets/headIcon.png" alt="" class="headIcon">
       <span>登陆</span>
     </div>
@@ -16,7 +16,7 @@
         <img src="../assets/news.png" alt="" style="width:14px;height:11px">
         <span>消息</span>
       </div>
-      <div class="cursor">
+      <div class="cursor" @click="logoin('2')">
         <img src="../assets/setUp.png" alt="" style="width:14px;height:14px">
         <span>设置</span>
       </div>
@@ -36,9 +36,14 @@ export default {
       searchList: []//  搜索列表
     }
   },
+  watch: {
+    type() {
+      console.log(1)
+    }
+  },
   methods: {
-    logoin() {
-      this.$emit('headerTopClick', '1')
+    logoin(key) {
+      this.$emit('headerTopClick', key)
     },
     // 股票搜索
     remoteMethod(query) {
