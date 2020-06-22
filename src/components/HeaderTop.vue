@@ -3,11 +3,7 @@
     <Select v-model="search" id="" class="top_tab_search" filterable remote :remote-method="remoteMethod" :loading="loading"  placeholder="代码/拼音/名称" @on-change="stockSearchChange">
       <Option v-for="item in searchList" :value="item.code" :key="item.code">{{ item.nameCode }}</Option>
     </Select>
-    <div class="logoin cursor" @click="logoin('1')" v-if="type == false || type == 'false'">
-      <img src="../assets/headIcon.png" alt="" class="headIcon">
-      <span>登陆</span>
-    </div>
-    <div class="login1" v-else>
+    <div class="login1"  v-if="type == true || type == 'true'">
       <div class="cursor" style="margin-right:16px">
         <img src="../assets/feedback.png" alt="" style="width:14px;height:15px">
         <span>反馈</span>
@@ -20,6 +16,10 @@
         <img src="../assets/setUp.png" alt="" style="width:14px;height:14px">
         <span>设置</span>
       </div>
+    </div>
+    <div class="logoin cursor" @click="logoin('1')" v-else>
+      <img src="../assets/headIcon.png" alt="" class="headIcon">
+      <span>登陆</span>
     </div>
   </div>
 </template>

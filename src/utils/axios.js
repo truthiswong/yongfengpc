@@ -9,7 +9,7 @@ axios.defaults.transformRequest = [function (data) {
 const service = axios.create({
   // apiBaseURL:'http://cuncun.admin.iisu.cn'
   // baseURL: env === 'development' ? '/' : '/',
-  timeout: 2000 // 请求超时时间
+  timeout: 5000 // 请求超时时间
 });
 
 // 请求拦截器
