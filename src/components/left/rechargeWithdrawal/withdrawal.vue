@@ -69,7 +69,11 @@ export default {
             this.$Message.success('恭喜您，提现成功，预计一个工作日到账，实际到账时间以银行/支付宝/微信到账时间为准。')
           }).catch(err => {
             this.btnloading = false
-            this.$Message.error(err.response.data.message)
+            if (err.response) {
+          this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
           })
         }
       } else {

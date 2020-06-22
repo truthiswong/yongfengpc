@@ -79,10 +79,26 @@ export function getUserStocksDel (code) {
   })
 }
 // -------------------------------------------------------------股票购买搜索------------------------------------------------------------
+//股票指数
+export function getMarketIndex (data) {
+  return request({
+    url: VUE_APP_BASE_API + 'data/open/stock/market/index',
+    method: 'post',
+    data
+  })
+}
 // 股票列表
 export function getExchangeList (data) {
   return request({
     url: VUE_APP_BASE_API + 'data/user/exchange/page',
+    method: 'post',
+    data
+  })
+}
+// 股票排行
+export function getHotExchange (data) {
+  return request({
+    url: VUE_APP_BASE_API + 'data/open/stock/hot/exchange',
     method: 'post',
     data
   })

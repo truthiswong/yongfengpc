@@ -1,13 +1,13 @@
 <template>
   <div class="top_tab">
-    <Select v-model="search" class="top_tab_search" multiple filterable remote :remote-method="remoteMethod" :loading="loading" size="small" placeholder="代码/拼音/名称">
-      <Option v-for="item in searchList" :value="item.id" :key="item.id">{{ item.name }}</Option>
+    <Select v-model="search" id="" class="top_tab_search" filterable remote :remote-method="remoteMethod" :loading="loading"  placeholder="代码/拼音/名称" @on-change="stockSearchChange">
+      <Option v-for="item in searchList" :value="item.code" :key="item.code">{{ item.nameCode }}</Option>
     </Select>
-    <div class="logoin cursor" @click="logoin('1')" v-show="type == false || type == 'false'">
+    <div class="logoin cursor" @click="logoin('1')" v-if="type == false || type == 'false'">
       <img src="../assets/headIcon.png" alt="" class="headIcon">
       <span>登陆</span>
     </div>
-    <div class="login1" v-show="type == true || type == 'true'">
+    <div class="login1" v-else>
       <div class="cursor" style="margin-right:16px">
         <img src="../assets/feedback.png" alt="" style="width:14px;height:15px">
         <span>反馈</span>
@@ -25,14 +25,17 @@
 </template>
 
 <script>
+import { getStockSearch } from '@/api/api';
 export default {
   name: 'header_top',
   components: {},
   data () {
     return {
       search: '', //  搜索内容
+      searchList: [], //  搜索列表
+      code: '',
+      loading: false,
       type: window.localStorage.getItem('loginType'),
-      loading: false, // loding
       searchList: []//  搜索列表
     }
   },
@@ -40,6 +43,8 @@ export default {
     type() {
       console.log(1)
     }
+  },
+  mounted() {
   },
   methods: {
     logoin(key) {
@@ -49,13 +54,32 @@ export default {
     remoteMethod(query) {
       if (query !== '') {
         this.loading = true;
-        setTimeout(() => {
+        getStockSearch(query).then(res => {
+          const arr = res.data
+          arr.forEach(v => {
+            v.nameCode = v.name + '(' + v.code + ')'
+          });
+          this.searchList = res.data
           this.loading = false;
-        }, 2000);
+        }).catch(err => {
+          if (err.response) {
+          this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
+          this.loading = false;
+        })
       } else {
+        this.loading = false;
         this.searchList = [];
       }
-    }
+    },
+    // 选择股票
+    stockSearchChange(key) {
+      this.code = key
+      this.$emit('search', key)
+      // this.stockDetail('1')
+    },
   }
 }
 </script>

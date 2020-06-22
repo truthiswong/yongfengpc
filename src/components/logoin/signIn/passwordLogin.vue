@@ -63,7 +63,11 @@ export default {
           this.$emit('loginSuccess', '1')
           window.location.reload()
         }).catch(err => {
+          if (err.response) {
           this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
           this.loading = false
         })
       }

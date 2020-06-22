@@ -151,7 +151,11 @@ export default {
         this.stockSearchChange(code)
         this.loading = false;
       }).catch(err => {
-        this.$Message.error(err.response.data.message)
+        if (err.response) {
+          this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
         this.loading = false;
       })
     },
@@ -168,7 +172,11 @@ export default {
           this.loading = false;
         }).catch(err => {
           console.log(err);
+          if (err.response) {
           this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
           this.loading = false;
         })
         // setTimeout(() => {
@@ -191,7 +199,11 @@ export default {
         this.tradingVolume(key)
         console.log(arr);
       }).catch(err => {
-        this.$Message.error(err.response.data.message)
+        if (err.response) {
+          this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
       })
     },
     // 交易量计算
@@ -277,7 +289,11 @@ export default {
         }
       }).catch(err => {
         this.btnloading = false
-        this.$Message.error(err.response.data.message)
+        if (err.response) {
+          this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
       })
     },
     addReduceBtnCLick(key) {

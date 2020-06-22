@@ -124,7 +124,11 @@ export default {
       getBankDetail().then(res => {
         this.assetsList.accountNo = res.data.accountNo
       }).catch(err => {
-        this.$Message.error(err.response.data.message)
+        if (err.response) {
+          this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
       })
       // 资产信息
       getFundBalance().then(res => {
@@ -133,25 +137,41 @@ export default {
         this.assetsList.totalIn = arr.totalIn
         this.assetsList.profit = (Number(arr.balance) - Number(arr.totalIn)).toFixed(2)
       }).catch(err => {
-        this.$Message.error(err.response.data.message)
+        if (err.response) {
+          this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
       })
       // 持仓数量
       getCountHold().then(res => {
         this.assetsList.hold = res.data
       }).catch(err => {
-        this.$Message.error(err.response.data.message)
+        if (err.response) {
+          this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
       })
       // 持仓实际本金
       getPrincipalActual().then(res => {
         this.assetsList.principalActual = res.data
       }).catch(err => {
-        this.$Message.error(err.response.data.message)
+        if (err.response) {
+          this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
       })
       // 持仓名义本金
       getPrincipalNominal().then(res => {
         this.assetsList.principalNominal = res.data
       }).catch(err => {
-        this.$Message.error(err.response.data.message)
+        if (err.response) {
+          this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
       })
       // 资金明细
       getFundLogPage().then(res => {
@@ -161,7 +181,11 @@ export default {
         });
         this.capitalList = arr
       }).catch(err => {
-        this.$Message.error(err.response.data.message)
+        if (err.response) {
+          this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
       })
     },
     // 我的身份信息
@@ -169,7 +193,11 @@ export default {
       getUserIdinfo().then(res => {
         console.log(res);
       }).catch(err => {
-        this.$Message.error(err.response.data.message)
+        if (err.response) {
+          this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
       })
     },
     // 提现

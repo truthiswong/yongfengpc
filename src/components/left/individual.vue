@@ -259,7 +259,18 @@ export default {
       beginDay: '',
     }
   },
+  watch: {
+    $route() {
+      this.code = this.$route.query.code
+      this.purchaseShow =1
+      this.getStockDetailList()
+      this.getKList()
+    }
+  },
   mounted() {
+    if (this.$route.query.code) {
+      this.code = this.$route.query.code
+    }
     this.getStockPriceList()
     this.getStockDetailList()
     this.getKList()
@@ -275,7 +286,11 @@ export default {
         this.spinShow1 = false
       }).catch(err => {
         this.spinShow1 = false
-        this.$Message.error(err.response.data.message)
+        if (err.response) {
+          this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
       })
     },
     // 自选列表
@@ -287,7 +302,11 @@ export default {
         const arr = res.data.data
         this.optionalList = arr
       }).catch(err => {
-        this.$Message.error(err.response.data.message)
+        if (err.response) {
+          this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
       })
     },
     getKList() {
@@ -327,7 +346,11 @@ export default {
         }).catch(err => {
           this.spinShow = false
           document.getElementById('kList').innerHTML = ''
-          this.$Message.error(err.response.data.message)
+          if (err.response) {
+            this.$Message.error(err.response.data.message)
+          } else {
+            this.$Message.error('请求超时,请重试')
+          }
         })
       } else {
         stockTsharing(this.code).then(res => {
@@ -339,11 +362,16 @@ export default {
           window.onresize = function () {
             mChart.resize();
           }
+          
           this.spinShow = false
         }).catch(err => {
           this.spinShow = false
           document.getElementById('kList').innerHTML = ''
-          this.$Message.error(err.response.data.message)
+          if (err.response) {
+            this.$Message.error(err.response.data.message)
+          } else {
+            this.$Message.error('请求超时,请重试')
+          }
         })
       }
       

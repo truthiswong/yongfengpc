@@ -108,15 +108,27 @@ export default {
                   this.$Message.success('注册成功');
                   this.emptyData()
                 }).catch(err => {
-                  this.$Message.error(err.response.data.message)
+                  if (err.response) {
+          this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
                   this.loading = false
                 })
               }).catch(err => {
-                this.$Message.error(err.response.data.message)
+                if (err.response) {
+          this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
                 this.loading = false
               })
             }).catch(err => {
-              this.$Message.error(err.response.data.message)
+              if (err.response) {
+          this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
               this.loading = false
             })
           } else {
@@ -155,7 +167,11 @@ export default {
             }
           }, 1000);
         }).catch(err => {
+          if (err.response) {
           this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
         })
       } else {
         this.$Message.error('手机号格式不正确')

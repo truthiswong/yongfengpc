@@ -51,7 +51,11 @@ export default {
         this.optionalList = arr
         this.num = arr.length
       }).catch(err => {
-        this.$Message.error(err.response.data.message)
+        if (err.response) {
+          this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
       })
     },
     // 删除自选
@@ -61,7 +65,11 @@ export default {
         this.getStocks()
         this.$emit('optionalDelCLick', '1')
       }).catch(err => {
-        this.$Message.error(err.response.data.message)
+        if (err.response) {
+          this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
       })
     },
     completeCLick() {

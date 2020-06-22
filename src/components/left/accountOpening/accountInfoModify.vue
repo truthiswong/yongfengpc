@@ -172,7 +172,11 @@ export default {
           this.btnLoading = false
         }).catch(err => {
           this.btnLoading = false
+          if (err.response) {
           this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
         })
       } else if (key === 3) {
         this.modal = false

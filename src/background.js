@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, ipcMain, Menu } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain, Menu, ipcRenderer } from 'electron'
 import {
   createProtocol,
   installVueDevtools
@@ -24,8 +24,8 @@ protocol.registerSchemesAsPrivileged([{
 function createWindow () {
   // Create the browser window.
   win = new BrowserWindow({
-    width: 1440,
-    height: 900,
+    width: 1470,
+    height: 950,
     webPreferences: {
       webSecurity: false,
       nodeIntegration: true
@@ -48,7 +48,7 @@ function createWindow () {
     win = null
   })
   ipcMain.on('login-window', () => {
-    win.setSize(1440, 940)
+    win.setSize(1550, 1100)
   })
   createMenu()
 }

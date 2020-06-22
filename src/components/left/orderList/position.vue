@@ -73,7 +73,11 @@ export default {
         this.$Message.success('成功')
         this.getList()
       }).catch(err => {
-        this.$Message.error(err.response.data.message)
+        if (err.response) {
+          this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
       })
     }
   }

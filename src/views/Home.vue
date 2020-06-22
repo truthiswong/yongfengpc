@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <HeaderTop ref="headerTop" @headerTopClick="getLogoin"></HeaderTop>
+    <HeaderTop ref="headerTop" @headerTopClick="getLogoin" @search="searchClick"></HeaderTop>
     <HeaderBottom></HeaderBottom>
     <MenuLeft></MenuLeft>
     <div class="content_right">
@@ -45,6 +45,14 @@ export default {
         this.$refs.setUp.getList()
       }
       
+    },
+    searchClick(code) {
+      this.$router.push({ 
+        path: '/trade/individual', 
+        query: {
+          code: code
+        } 
+      })
     }
   }
 }

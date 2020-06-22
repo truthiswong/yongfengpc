@@ -73,7 +73,11 @@ export default {
         if (key === 2) {
           this.spinShow = false
         }
-        this.$Message.error(err.response.data.message)
+        if (err.response) {
+          this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
       })
     },
     searchChange() {
@@ -95,7 +99,11 @@ export default {
       }).catch(err => {
         this.spinShow = false
         if (err.response.data) {
+          if (err.response) {
           this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
         } else {
           this.$Message.error('请求超时')
         }
@@ -108,7 +116,11 @@ export default {
         this.getStocks(2)
         this.$emit('AddOptionalListCLick', '1')
       }).catch(err => {
-        this.$Message.error(err.response.data.message)
+        if (err.response) {
+          this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
       })
     },
     // 删除自选
@@ -118,7 +130,11 @@ export default {
         this.getStocks(2)
         this.$emit('AddOptionalListCLick', '1')
       }).catch(err => {
-        this.$Message.error(err.response.data.message)
+        if (err.response) {
+          this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
       })
     },
     completeCLick() {
