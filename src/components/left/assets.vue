@@ -11,7 +11,7 @@
             </div>
             <div class="my_text1" @click="withdrawalRechargeClick(1)">充值</div>
             <div class="my_text2" @click="withdrawalRechargeClick(2)">提现</div>
-            <img src="../../assets/setUp.png" alt="" class="my_img">
+            <img src="../../assets/setUp.png" alt="" class="my_img cursor" @click="accountInfoCLick">
           </div>
           <div class="myDetailed">
             <div class="position">
@@ -107,6 +107,7 @@ export default {
         principalActual: '-',
         profit: '-'
       },
+      num: 0,
       capitalList: []
     }
   },
@@ -114,7 +115,8 @@ export default {
     this.$refs.financing.ascriptionTypeClick(1)
     this.$refs.securitiesLending.ascriptionTypeClick(1)
     if (this.type === true || this.type === 'true') {
-      this.getList()
+      this.getList() 
+      this.aaa = setInterval(this.getList,5000)
       // this.getUserIdinfoList()
     }
   },
@@ -191,7 +193,6 @@ export default {
     // 我的身份信息
     getUserIdinfoList() {
       getUserIdinfo().then(res => {
-        console.log(res);
       }).catch(err => {
         if (err.response) {
           this.$Message.error(err.response.data.message)
@@ -235,7 +236,24 @@ export default {
     // 提现充值成功刷新数据列表
     rechargeWithdrawalRefresh(key) {
       this.getList()
+      this.num = this.num +1
+      if (key == '3') {
+        this.$router.push({ 
+          path: '/trade/assets/entrust', 
+          query: {
+            code: key + this.num
+          } 
+        })
+      }
     }
+  },
+  beforeDestroy(){
+    if (this.aaa) {
+      clearInterval(this.aaa)
+      this.aaa = null;
+    }
+    this.$refs.financing.destroyedList()
+    this.$refs.securitiesLending.destroyedList()
   }
 }
 </script>

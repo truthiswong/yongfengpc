@@ -35,11 +35,14 @@ export default {
   components: {},
   data () {
     return {
+      type: window.localStorage.getItem('loginType'),
       list: []
     }
   },
   mounted() {
-    this.getList()
+    if (this.type === true || this.type === 'true') {
+      this.getList()
+    }
   },
   methods: {
     getList() {

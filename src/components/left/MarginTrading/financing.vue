@@ -32,7 +32,7 @@
         <div>
           <div style="display:flex">
             <img src="../../../assets/addBtn.png" alt="" class="btnImg" @click="addReduceBtnCLick(3)">
-            <Input placeholder="--" style="width: 213px" disabled v-model="share1" id="marginTradingInput" @on-change="sharesChange"/>
+            <Input placeholder="--" style="width: 213px"  v-model="share1" id="marginTradingInput" @on-change="sharesChange"/>
             <img src="../../../assets/reduceBtn.png" alt="" class="btnImg" @click="addReduceBtnCLick(4)">
           </div>
           <div style="width:100%;margin-top:4px">
@@ -189,7 +189,18 @@ export default {
     // 选择股票
     stockSearchChange(key) {
       this.code = key
+      if (this.aaa) {
+        clearInterval(this.aaa)
+        this.aaa = null;
+      }
       this.stockDetail('1')
+      this.aaa = setInterval(this.stockDetail,3000)
+    },
+    destroyedList() {
+      if (this.aaa) {
+        clearInterval(this.aaa)
+        this.aaa = null;
+      }
     },
     // 股票详情
     stockDetail(key) {
@@ -197,7 +208,6 @@ export default {
         const arr = res.data
         this.sharesDetail = arr
         this.tradingVolume(key)
-        console.log(arr);
       }).catch(err => {
         if (err.response) {
           this.$Message.error(err.response.data.message)
@@ -283,7 +293,7 @@ export default {
         this.btnloading = false
         this.$Message.success('购买成功')
         if (this.ascriptionType === 1 || this.ascriptionType === '1') {
-          this.$emit('securitiesLendingFinancing', '1')
+          this.$emit('securitiesLendingFinancing', '3')
         } else if (this.ascriptionType === 2 || this.ascriptionType === '2') {
           this.$emit('securitiesLendingFinancing', '1')
         }
@@ -332,6 +342,7 @@ export default {
     },
     // 返回
     returnClick() {
+      this.destroyedList()
       this.$emit('securitiesLendingFinancing', '1')
     },
   }

@@ -8,7 +8,7 @@
       <div class="tabTitle5 top3">委托价格</div>
       <div class="tabTitle6 top3">委托数量</div>
       <div class="tabTitle8 top3">当前价</div>
-      <div class="tabTitle9 top3">实际盈亏</div>
+      <div class="tabTitle9 top3">浮动盈亏</div>
     </div>
     <div class="tableList">
       <ul>
@@ -35,13 +35,39 @@ export default {
   components: {},
   data () {
     return {
+      type: window.localStorage.getItem('loginType'),
       list: []
     }
   },
+  watch: {
+    $route() {
+      if (this.aaa) {
+        clearInterval(this.aaa)
+        this.aaa = null;
+      }
+      this.getList() 
+      this.aaa = setInterval(this.getList,3000)
+    }
+  },
   mounted() {
-    this.getList()
+    if (this.type === true || this.type === 'true') {
+      this.getList() 
+      if (this.aaa) {
+        clearInterval(this.aaa)
+        this.aaa = null;
+      }
+      this.aaa = setInterval(this.getList,3000)
+    }
   },
   methods: {
+    getSetIntervalList(){
+      this.getList() 
+      if (this.aaa) {
+        clearInterval(this.aaa)
+        this.aaa = null;
+      }
+      this.aaa = setInterval(this.getList,3000)
+    },
     getList() {
       const data = {
         status: 'entrust',
@@ -54,8 +80,20 @@ export default {
           v.closeTime = timeDate2(v.closeTime)
           v.timeCreated = timeDate2(v.timeCreated)
         });
+        if (arr.length == 0) {
+          if (this.aaa) {
+            clearInterval(this.aaa)
+            this.aaa = null;
+          }
+        }
         this.list = arr
       })
+    }
+  },
+  beforeDestroy(){
+    if (this.aaa) {
+      clearInterval(this.aaa)
+      this.aaa = null;
     }
   }
 }

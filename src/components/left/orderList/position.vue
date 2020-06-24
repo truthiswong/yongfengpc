@@ -9,7 +9,7 @@
       <div class="tabTitle6 top3">委托数量</div>
       <!-- <div class="tabTitle7 top3">备注</div> -->
       <div class="tabTitle8 top3">当前价</div>
-      <div class="tabTitle9 top3">实际盈亏</div>
+      <div class="tabTitle9 top3">浮动盈亏</div>
     </div>
     <div class="tableList">
       <ul >
@@ -46,11 +46,19 @@ export default {
   components: {},
   data () {
     return {
+      type: window.localStorage.getItem('loginType'),
       list: []
     }
   },
   mounted() {
-    this.getList()
+    if (this.type === true || this.type === 'true') {
+      this.getList() 
+      if (this.aaa) {
+        clearInterval(this.aaa)
+        this.aaa = null;
+      }
+      this.aaa = setInterval(this.getList,3000)
+    }
   },
   methods: {
     getList() {
@@ -79,6 +87,12 @@ export default {
           this.$Message.error('请求超时,请重试')
         }
       })
+    }
+  },
+  beforeDestroy(){
+    if (this.aaa) {
+      clearInterval(this.aaa)
+      this.aaa = null;
     }
   }
 }

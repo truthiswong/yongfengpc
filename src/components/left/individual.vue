@@ -244,6 +244,7 @@ export default {
   components: { AddOptionalList, OptionalDel, Financing, SecuritiesLending, Position, ClosedPosition, Entrust },
   data () {
     return {
+      type: window.localStorage.getItem('loginType'),
       spinShow: false,
       spinShow1: false,
       purchaseShow: 1,
@@ -271,14 +272,20 @@ export default {
     if (this.$route.query.code) {
       this.code = this.$route.query.code
     }
-    this.getStockPriceList()
-    this.getStockDetailList()
-    this.getKList()
+    if (this.type === true || this.type === 'true') {
+      this.getStockPriceList()
+    }
+    this.getStockDetailList(1)
+    this.getKList(1)
+    this.aaa = setInterval(this.getStockDetailList,3000)
+    // this.bbb = setInterval(this.getKList,3000)
   },
   methods: {
     //股票详情
-    getStockDetailList() {
-      this.spinShow1 = true
+    getStockDetailList(key) {
+      if (key == 1) {
+        this.spinShow1 = true
+      }
       getStockDetail(this.code).then(res => {
         const arr = res.data
         arr.currcapital = (arr.currcapital).toFixed(0)
@@ -309,16 +316,20 @@ export default {
         }
       })
     },
-    getKList() {
-      this.spinShow = true
+    getKList(key) {
+      if (key == 1) {
+        this.spinShow = true
+      }
       if (this.klist !== '5') {
         let d = new Date()
         if (this.klist === 'day') {
           d.setMonth(d.getMonth() - 5)
         } else if (this.klist === 'week') {
-          d.setMonth(d.getMonth() - 30)
+          // d.setMonth(d.getMonth() - 30)
+          d.setMonth(d.getMonth() - 23)
         } else if (this.klist === 'month') {
-          d.setMonth(d.getMonth() - 100)
+          d.setMonth(d.getMonth() - 24)
+          // d.setMonth(d.getMonth() - 100)
         }
         let a = (d.toLocaleDateString()).split('/')
         if (Number(a[1]) < 10) {
@@ -408,20 +419,42 @@ export default {
     // 选择自选股
     optionalCodeClick(code) {
       this.code = code
+      if (this.aaa) {
+        clearInterval(this.aaa)
+        this.aaa = null;
+      }
+      if (this.bbb) {
+        clearInterval(this.bbb)
+        this.bbb = null;
+      }
       this.getStockDetailList()
       this.getKList()
+      this.aaa = setInterval(this.getStockDetailList,3000)
+      // this.bbb = setInterval(this.getKList,3000)
     },
     // 切换订单类型
     orderCLick(key) {
       this.orderId = key
       if (key == 1) {
-        this.$refs.entrust.getList()
+        this.$refs.entrust.getSetIntervalList()
       } else if (key == 2) {
         this.$refs.position.getList()
       } else if (key == 3) {
         this.$refs.closedPosition.getList()
       }
     }
+  },
+  beforeDestroy(){
+    if (this.aaa) {
+      clearInterval(this.aaa)
+      this.aaa = null;
+    }
+    if (this.bbb) {
+      clearInterval(this.bbb)
+      this.bbb = null;
+    }
+    this.$refs.financing.destroyedList()
+    this.$refs.securitiesLending.destroyedList()
   }
 }
 </script>

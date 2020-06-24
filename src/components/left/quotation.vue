@@ -49,7 +49,7 @@
     </div>
     <Drawer :closable="false" v-model="drawerType" width="362px" id="drawer" @on-close="drawerClose">
       <div style="" class="business" id="spin1">
-        <div v-show="purchaseShow == 1" style="height:100%">
+        <div v-show="purchaseShow == 1" style="min-height: 100%;" class="drawerlist">
           <div class="sharesBasics">
             <div class="nameCode">{{stockBasis.code}} {{stockBasis.name}}</div>
             <div :class="stockBasis.diff_money>0?'priceRange red':'priceRange green'">{{stockBasis.nowPrice}} {{stockBasis.diff_money}} {{stockBasis.diff_rate}}%</div>
@@ -233,6 +233,7 @@ export default {
   },
   mounted() {
     this.getList()
+    this.aaa = setInterval(this.getList,3000)
   },
   methods: {
     getList() {
@@ -277,23 +278,38 @@ export default {
     tabClick(key) {
       this.tabBar = key
       this.getList()
+      if (this.aaa) {
+        clearInterval(this.aaa)
+        this.aaa = null;
+      }
+      this.aaa = setInterval(this.getList,3000)
     } ,
     // 选中股票
     tabListClick(code) {
       this.code = code 
-      getStockDetail(this.code).then(res => {
-        const arr = res.data
-        arr.currcapital = (arr.currcapital).toFixed(0)
-        this.stockBasis = arr
-        this.drawerType = true
-      }).catch(err => {
-        this.drawerType = true
-        if (err.response) {
-          this.$Message.error(err.response.data.message)
-        } else {
-          this.$Message.error('请求超时,请重试')
-        }
+      if (this.aaa) {
+        clearInterval(this.aaa)
+        this.aaa = null;
+      }
+      this.$router.push({ 
+        path: '/trade/individual', 
+        query: {
+          code: code
+        } 
       })
+      // getStockDetail(this.code).then(res => {
+      //   const arr = res.data
+      //   arr.currcapital = (arr.currcapital).toFixed(0)
+      //   this.stockBasis = arr
+      //   this.drawerType = true
+      // }).catch(err => {
+      //   this.drawerType = true
+      //   if (err.response) {
+      //     this.$Message.error(err.response.data.message)
+      //   } else {
+      //     this.$Message.error('请求超时,请重试')
+      //   }
+      // })
     },
     // 融资融券成功刷新列表
     rechargeWithdrawalRefresh(key) {
@@ -321,6 +337,12 @@ export default {
     },
     drawerClose() {
       this.purchaseShow = 1
+    }
+  },
+  beforeDestroy(){
+    if (this.aaa) {
+      clearInterval(this.aaa)
+      this.aaa = null;
     }
   }
 }
@@ -431,11 +453,17 @@ export default {
     }
   }
 }
+.business::-webkit-scrollbar {
+  display: none;
+}
+.drawerlist::-webkit-scrollbar {
+  display: none;
+}
 .business{
   min-width: 357px;
   text-align: right;
   position: relative;
-  height: 100%;
+  min-height: 100%;
   background: #242C37;
   border-left: 2px solid rgba(20,30,40,1);
   .sharesBasics{
