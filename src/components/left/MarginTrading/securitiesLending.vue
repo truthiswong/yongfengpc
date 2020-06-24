@@ -58,7 +58,65 @@
     </div>
     <div class="fromList" style="display:flex">
       <div class="title">买卖盘口：</div>
-      <ul class="businessList">
+      <div class="businessTable">
+        <div class="orange title_text500"></div>
+        <div class="businessTable_1" style="background:rgba(255,104,36,0.1);">
+          <div class="businessTable_list">
+            <span class="span1">买1</span>
+            <span :class="sharesDetail.diff_money>0?'span2 red':'span2 green'">{{sharesDetail.sell1_m}}</span>
+            <span class="span3">{{sharesDetail.sell1_n}}</span>
+          </div>
+          <div class="businessTable_list">
+            <span class="span1">买2</span>
+            <span :class="sharesDetail.diff_money>0?'span2 red':'span2 green'">{{sharesDetail.sell2_m}}</span>
+            <span class="span3">{{sharesDetail.sell2_n}}</span>
+          </div>
+          <div class="businessTable_list">
+            <span class="span1">买3</span>
+            <span :class="sharesDetail.diff_money>0?'span2 red':'span2 green'">{{sharesDetail.sell3_m}}</span>
+            <span class="span3">{{sharesDetail.sell3_n}}</span>
+          </div>
+          <div class="businessTable_list">
+            <span class="span1">买4</span>
+            <span :class="sharesDetail.diff_money>0?'span2 red':'span2 green'">{{sharesDetail.sell4_m}}</span>
+            <span class="span3">{{sharesDetail.sell4_n}}</span>
+          </div>
+          <div class="businessTable_list">
+            <span class="span1">买5</span>
+            <span :class="sharesDetail.diff_money>0?'span2 red':'span2 green'">{{sharesDetail.sell5_m}}</span>
+            <span class="span3">{{sharesDetail.sell5_n}}</span>
+          </div>
+        </div>
+        <div class="blue title_text500"></div>
+        <div class="businessTable_1" style="background:rgba(33,141,242,0.1);">
+          <div class="businessTable_list">
+            <span class="span1">卖1</span>
+            <span :class="sharesDetail.diff_money>0?'span2 red':'span2 green'">{{sharesDetail.buy1_m}}</span>
+            <span class="span3">{{sharesDetail.buy1_n}}</span>
+          </div>
+          <div class="businessTable_list">
+            <span class="span1">卖2</span>
+            <span :class="sharesDetail.diff_money>0?'span2 red':'span2 green'">{{sharesDetail.buy2_m}}</span>
+            <span class="span3">{{sharesDetail.buy2_n}}</span>
+          </div>
+          <div class="businessTable_list">
+            <span class="span1">卖3</span>
+            <span :class="sharesDetail.diff_money>0?'span2 red':'span2 green'">{{sharesDetail.buy3_m}}</span>
+            <span class="span3">{{sharesDetail.buy3_n}}</span>
+          </div>
+          <div class="businessTable_list">
+            <span class="span1">卖4</span>
+            <span :class="sharesDetail.diff_money>0?'span2 red':'span2 green'">{{sharesDetail.buy4_m}}</span>
+            <span class="span3">{{sharesDetail.buy4_n}}</span>
+          </div>
+          <div class="businessTable_list">
+            <span class="span1">卖5</span>
+            <span :class="sharesDetail.diff_money>0?'span2 red':'span2 green'">{{sharesDetail.buy5_m}}</span>
+            <span class="span3">{{sharesDetail.buy5_n}}</span>
+          </div>
+        </div>
+      </div>
+      <!-- <ul class="businessList">
         <li><div class="text1">卖5</div><div class="text2">{{sharesDetail.buy5_m}}</div><div class="text3">{{sharesDetail.buy5_n}}</div></li>
         <li><div class="text1">卖4</div><div class="text2">{{sharesDetail.buy4_m}}</div><div class="text3">{{sharesDetail.buy4_n}}</div></li>
         <li><div class="text1">卖3</div><div class="text2">{{sharesDetail.buy3_m}}</div><div class="text3">{{sharesDetail.buy3_n}}</div></li>
@@ -69,7 +127,7 @@
         <li><div class="text1">买3</div><div class="text2">{{sharesDetail.sell3_m}}</div><div class="text3">{{sharesDetail.sell3_n}}</div></li>
         <li><div class="text1">买4</div><div class="text2">{{sharesDetail.sell4_m}}</div><div class="text3">{{sharesDetail.sell4_n}}</div></li>
         <li><div class="text1">买5</div><div class="text2">{{sharesDetail.sell5_m}}</div><div class="text3">{{sharesDetail.sell5_n}}</div></li>
-      </ul>
+      </ul> -->
     </div>
   </div>
   <div style="position: relative;">
@@ -376,6 +434,53 @@ export default {
     font-size:12px;
     font-weight:400;
     color:rgba(131,141,158,1);
+    .businessTable{
+      color: #fff;
+      width:275px;
+      .orange{
+        width:100%;
+        background:rgba(255,104,36,1);
+        height: 20px;
+        line-height: 20px;
+        text-align: left;
+        padding-left: 5px;
+      }
+      .blue{
+        width:100%;
+        background:rgba(33,141,242,1);
+        height: 20px;
+        line-height: 20px;
+        text-align: right;
+        padding-right: 5px;
+      }
+      // display: flex;
+      font-size:12px;
+      font-family:PingFangSC-Medium,PingFang SC;
+      font-weight:500;
+      .businessTable_1{
+        width: 100%;
+        .businessTable_list{
+          width:100%;
+          height: 30px;
+          position: relative;
+          .span1{
+            position: absolute;
+            top: 4px;
+            left: 5px;
+          }
+          .span2{
+            position: absolute;
+            top: 4px;
+            left: 120px;
+          }
+          .span3{
+            position: absolute;
+            top: 4px;
+            right: 5px;
+          }
+        }
+      }
+    }
     .title{
       display: inline-block;
       width: 60px;
