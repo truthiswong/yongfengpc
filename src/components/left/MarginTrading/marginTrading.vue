@@ -1,7 +1,8 @@
 <template>
 <div class="home">
-  <div class="home_title title_text14500">融资（多）
-    <img src="../../../assets/fork.png" alt="" style="width:12px;height:12px;float: right;margin-top: 5px;" v-show="ascriptionType == 2" @click="returnClick">
+  <div class="home_title title_text14500">
+    <div :class="rzrqType == 'loanCapital'?'home_title_rzrq cursor red_back':'home_title_rzrq cursor'"  @click="rzrqType = 'loanCapital'">融资（多）</div>
+    <div :class="rzrqType == 'loanStock'?'home_title_rzrq cursor bule_back':'home_title_rzrq cursor'" @click="rzrqType = 'loanStock'">融券（空）</div>
   </div>
   <div class="from">
     <div class="fromList fromLine">
@@ -133,10 +134,11 @@
   <div style="position: relative;">
     <div class="transactionBtn">
       <div class="btnFrom">
-        <div class="title_text text1">本金 {{list.principal}}</div>
+        <div class="title_text text1" @click="modal = true">本金 {{list.principal}}</div>
         <div class="title_text text2">服务费 {{list.serviceCharge}}</div>
         <div class="title_text14500 text3">需支付：{{list.payment}}元</div>
-        <Button type="error" class="bnt1" :disabled="confirm"  @click="modal = true">融资(多)</Button>
+        <Button type="info" class="bnt1" :disabled="confirm" @click="modal = true" v-show="rzrqType == 'loanStock'" >融券(少)</Button>
+        <Button type="error" class="bnt1" :disabled="confirm" @click="modal = true"  v-show="rzrqType == 'loanCapital'">融资(多)</Button>
       </div>
     </div>
   </div>
@@ -165,7 +167,8 @@
           <div class="modalContent_list_content">{{list.payment}}</div>
         </div>
         <div class="modalContent_list" style="justify-content:flex-end">
-          <Button type="error" class="bnt1" size="small"  :loading="btnloading" @click="btnEntrust">确认融资(多)</Button>
+          <Button type="info" class="bnt1" size="small" :loading="btnloading" @click="btnEntrust" v-show="rzrqType == 'loanStock'" >确认融券(少)</Button>
+          <Button type="error" class="bnt1" size="small" :loading="btnloading" @click="btnEntrust"  v-show="rzrqType == 'loanCapital'">确认融资(多)</Button>
         </div>
       </div>
     </div>
@@ -178,6 +181,7 @@ export default {
   data () {
     return {
       modal: false,
+      rzrqType: 'loanCapital',
       search: '', //  搜索内容
       btn_num: 'all', // 份额
       loading: false, // loding
@@ -308,7 +312,7 @@ export default {
     tradingVolume(add) {
       const data = {
         positions: this.btn_num,
-        type: 'loanCapital',
+        type: this.rzrqType,
         entrustPrice: this.sharesDetail.nowPrice,
         leverFold: '10'
       }
@@ -337,7 +341,7 @@ export default {
     commission() {
       const data = {
         volume: parseInt(this.share1),
-        type: 'loanCapital',
+        type: this.rzrqType,
         entrustPrice: this.sharesDetail.nowPrice,
         leverFold: '10'
       }
@@ -371,7 +375,7 @@ export default {
       const data = {
         stockCode: this.sharesDetail.code,
         entrustPrice: this.sharesDetail.nowPrice,
-        type: 'loanCapital',
+        type: this.rzrqType,
         volume: parseInt(this.share1),
         leverFold: '10'
       }
@@ -449,11 +453,19 @@ export default {
   border-left: 1px solid rgba(20,30,40,1);
   border-right: 1px solid rgba(20,30,40,1);
   .home_title{
+    display: flex;
     width: 100%;
     height: 40px;
-    background:rgba(227,53,49,1);
-    padding: 10px;
+    // background:#218DF2;
+    // padding: 10px;
     color:rgba(255,255,255,1);
+    .home_title_rzrq{
+      width: 50%;
+      height: 100;
+      text-align: center;
+      padding: 10px;
+      // background:rgba(227,53,49,1);
+    }
   }
 }
 .from{

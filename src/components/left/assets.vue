@@ -40,23 +40,6 @@
             </div>
           </div>
         </div>
-        <div class="capital">
-          <div class="title_text" style="margin-left:10px">资金明细</div>
-          <div class="tab_title">
-            <div class="tab_1">时间</div>
-            <div class="tab_2">订单号</div>
-            <div class="tab_3">金额</div>
-            <div class="tab_4">状态</div>
-          </div>
-          <div class="tab_table">
-            <div v-for="(item,index) of capitalList" :key="index" class="tab_table_list">
-              <div class="tab_1">{{item.time}}</div>
-              <div class="tab_2">{{item.id}}</div>
-              <div class="tab_3">{{item.amount}}</div>
-              <div :class="item.status.name=='交易亏损'?'tab_4 red':'tab_4'">{{item.status.name}}</div>
-            </div>
-          </div>
-        </div>
         <div class="order">
           <div class="tabList">
             <div class="title">订单</div>
@@ -73,8 +56,25 @@
           </div>
         </div>
       </div>
-      <Financing ref="financing" @securitiesLendingFinancing="rechargeWithdrawalRefresh"></Financing>
-      <SecuritiesLending ref="securitiesLending" @securitiesLendingFinancing="rechargeWithdrawalRefresh"></SecuritiesLending>
+      <div class="capital">
+        <div class="title_text" style="margin-left:10px">资金明细</div>
+        <div class="tab_title">
+          <div class="tab_1">时间</div>
+          <div class="tab_2">订单号</div>
+          <div class="tab_3">金额</div>
+          <div class="tab_4">状态</div>
+        </div>
+        <div class="tab_table">
+          <div v-for="(item,index) of capitalList" :key="index" class="tab_table_list">
+            <div class="tab_1">{{item.time}}</div>
+            <div class="tab_2">{{item.id}}</div>
+            <div :class="Number(item.amount)>0?'tab_3 red':'tab_3 green' ">{{item.amount}}</div>
+            <div :class="item.status.name=='交易亏损'?'tab_4 red':'tab_4'">{{item.status.name}}</div>
+          </div>
+        </div>
+      </div>
+      <!-- <Financing ref="financing" @securitiesLendingFinancing="rechargeWithdrawalRefresh"></Financing> -->
+      <MarginTrading ref="marginTrading" @securitiesLendingFinancing="rechargeWithdrawalRefresh"></MarginTrading>
       <Recharge ref="recharge" @rechargeWithdrawal="rechargeWithdrawalRefresh"></Recharge>
       <Withdrawal ref="withdrawal" @rechargeWithdrawal="rechargeWithdrawalRefresh"></Withdrawal>
       <AccountInfo ref="accountInfo" @modifyAccountInfo="modifyAccountInfoChange"></AccountInfo>
@@ -86,15 +86,15 @@
 <script>
 import { getUserIdinfo, getBankDetail, getFundBalance, getCountHold, getPrincipalActual, getPrincipalNominal, getFundLogPage } from '@/api/api';
 import { timeDate2 } from '@/api/account';
-import Financing from './MarginTrading/financing' // 融资
-import SecuritiesLending from './MarginTrading/securitiesLending' // 融券
+// import Financing from './MarginTrading/financing' // 融资
+import MarginTrading from './MarginTrading/marginTrading' // 融资融券
 import Recharge from './rechargeWithdrawal/recharge' // 充值
 import Withdrawal from './rechargeWithdrawal/withdrawal' // 提现
 import AccountInfo from './accountOpening/accountInfo' // 提现
 import AccountInfoModify from './accountOpening/accountInfoModify' // 修改开户信息
 export default {
   name: 'menuLift',
-  components: {Financing, SecuritiesLending, Recharge, Withdrawal, AccountInfo, AccountInfoModify},
+  components: {MarginTrading, Recharge, Withdrawal, AccountInfo, AccountInfoModify},
   data () {
     return {
       type: window.localStorage.getItem('loginType'),
@@ -112,9 +112,9 @@ export default {
     }
   },
   mounted() {
-    this.$refs.financing.ascriptionTypeClick(1)
-    this.$refs.securitiesLending.ascriptionTypeClick(1)
-    if (this.type === true || this.type === 'true') {
+    // this.$refs.financing.ascriptionTypeClick(1)
+    this.$refs.marginTrading.ascriptionTypeClick(1)
+    if (window.localStorage.getItem('loginType') == true || window.localStorage.getItem('loginType') == 'true') {
       this.getList() 
       this.aaa = setInterval(this.getList,5000)
       // this.getUserIdinfoList()
@@ -252,8 +252,8 @@ export default {
       clearInterval(this.aaa)
       this.aaa = null;
     }
-    this.$refs.financing.destroyedList()
-    this.$refs.securitiesLending.destroyedList()
+    // this.$refs.financing.destroyedList()
+    this.$refs.marginTrading.destroyedList()
   }
 }
 </script>
@@ -369,59 +369,59 @@ export default {
       left: 442px;
     }
   }
-  .capital{
-    width: 100%;
-    height: 311px;
-    border-bottom: 2px solid rgba(20,30,40,1);
-    padding: 10px 0 0 0;
-    .tab_title{
-      width: 100%;
-      height: 27px;
-      color:rgba(131,141,158,1);
-      border-bottom: 1px solid rgba(41,51,64,1);
-      margin-top: 6px;
-      position: relative;
-    }
-    .tab_table{
-      width: 100%;
-      height: calc(100% - 52px);
-      box-sizing:border-box;
-      overflow-x: hidden;
-      .tab_table_list{
-        width: 100%;
-        height: 27px;
-        position: relative;
-        color:rgba(221,221,221,1);
-      }
-    }
-    .tab_1{
-      position: absolute;
-      top: 5px;
-      left: 10px;
-    }
-    .tab_2{
-      position: absolute;
-      top: 5px;
-      // right: 420px;
-      right: 357px;
-    }
-    .tab_3{
-      position: absolute;
-      top: 5px;
-      right: 216px;
-    }
-    .tab_4{
-      position: absolute;
-      top: 5px;
-      right: 10px;
-    }
-  }
 }
 .tab_table::-webkit-scrollbar {
   display: none;
 }
+.capital{
+  min-width: 673px;
+  height: 100%;
+  // border-bottom: 2px solid rgba(20,30,40,1);
+  padding: 10px 0 0 0;
+  .tab_title{
+    width: 100%;
+    height: 27px;
+    color:rgba(131,141,158,1);
+    border-bottom: 1px solid rgba(41,51,64,1);
+    margin-top: 6px;
+    position: relative;
+  }
+  .tab_table{
+    width: 100%;
+    height: calc(100% - 52px);
+    box-sizing:border-box;
+    overflow-x: hidden;
+    .tab_table_list{
+      width: 100%;
+      height: 27px;
+      position: relative;
+      color:rgba(221,221,221,1);
+    }
+  }
+  .tab_1{
+    position: absolute;
+    top: 5px;
+    left: 10px;
+  }
+  .tab_2{
+    position: absolute;
+    top: 5px;
+    // right: 420px;
+    right: 357px;
+  }
+  .tab_3{
+    position: absolute;
+    top: 5px;
+    right: 216px;
+  }
+  .tab_4{
+    position: absolute;
+    top: 5px;
+    right: 10px;
+  }
+}
 .order{
-  height:  calc(100% - 504px);
+  height:  calc(100% - 200px);
   width: 100%;
   .tabList{
     height: 50px;

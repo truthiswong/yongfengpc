@@ -1,18 +1,18 @@
 <template>
   <div class="list">
-    <Affix :offset-top="40" style="width:100%">
+    <!-- <Affix :offset-top="39" style="width:100%"> -->
       <div class="list_tab">
         <div class="tab cursor" :style="tabBar == '1'? 'background:rgba(36,57,75,1);':''" @click="tabClick('1')">沪深</div>
         <div class="tab cursor" :style="tabBar == '2'? 'background:rgba(36,57,75,1);':''" @click="tabClick('2')">港股</div>
         <div class="tab cursor" :style="tabBar == '3'? 'background:rgba(36,57,75,1);':''" @click="tabClick('3')">自选</div>
       </div>
-    </Affix>
+    <!-- </Affix> -->
     <div class="table">
       <div class="table_title">
         <div class="textpad tab_text1 right">序号</div>
         <div class="textpad tab_text2 left">代码</div>
         <div class="textpad tab_text3 left">名称</div>
-        <div class="textpad tab_text4 right">最新价</div>
+        <div class="textpad tab_text4 right" style="min-width: 72px;">最新价</div>
         <div class="textpad tab_text5 right">涨跌额</div>
         <div class="textpad tab_text6 right">涨跌幅</div>
         <div class="textpad tab_text4 right">今开</div>
@@ -22,7 +22,7 @@
         <div class="textpad tab_text5 right">振幅</div>
         <div class="textpad tab_text4 right">涨停价</div>
         <div class="textpad tab_text4 right">跌停价</div>
-        <div class="textpad tab_text2 right">成交额</div>
+        <div class="textpad tab_text2 right" style="min-width: 131px;">成交额</div>
         <div class="textpad tab_text7 right">成交量</div>
         <div class="textpad tab_text5 right">成交价</div>
       </div>
@@ -31,7 +31,7 @@
           <div class="right tab_text1">{{Number(index) + 1}}</div>
           <div class="left tab_text2">{{item.code}}</div>
           <div class="left tab_text3">{{item.name}}</div>
-          <div class="right tab_text4">{{item.nowPrice}}</div>
+          <div class="right tab_text4" style="min-width: 72px;">{{item.nowPrice}}</div>
           <div :class="Number(item.diff_money) > 0?'right tab_text5 red':'right tab_text5 green'">{{item.diff_money}}</div>
           <div :class="Number(item.diff_rate) > 0?'right tab_text6 red':'right tab_text6 green'">{{item.diff_rate}}%</div>
           <div :class="Number(item.openPrice) >= Number(item.yestodayClosePrice)?'right tab_text4 red':'right tab_text4 green'">{{item.openPrice}}</div>
@@ -41,8 +41,8 @@
           <div class="right tab_text5">{{item.swing}}%</div>
           <div class="right tab_text4 red">{{item.highLimit}}</div>
           <div class="right tab_text4 green">{{item.downLimit}}</div>
-          <div class="right tab_text2">{{item.circulation_value}}</div>
-          <div class="right tab_text7">{{item.currcapital}}</div>
+          <div class="right tab_text2" style="min-width: 131px;">{{item.tradeAmount}}</div>
+          <div class="right tab_text7">{{item.tradeNum}}</div>
           <div class="right tab_text5">{{item.closePrice}}</div>
         </div>
       </div>
@@ -240,10 +240,10 @@ export default {
       const data = {}
       if (this.tabBar == '1') {
         data.markets = 'sh,sz',
-        data.limit = '60'
+        data.limit = '150'
       } else if(this.tabBar == '2') {
         data.markets = 'hk',
-        data.limit = '60'
+        data.limit = '150'
       } else if(this.tabBar == '3') {
         data.showprice = 1
       }
@@ -352,6 +352,7 @@ export default {
   width: 100%;
   height: 100%;
   .list_tab{
+    background:rgba(35,44,55,1);
     height: 41px;
     width: 100%;
     display: flex;
@@ -390,7 +391,7 @@ export default {
       }
     }
     .table_name{
-      height: calc(100% - 25px);
+      height: calc(100% - 66px);
       border-collapse:collapse;
       overflow-x: hidden;
       .table_name_list{
@@ -408,6 +409,9 @@ export default {
           border: 1px solid rgba(44,55,68,1);
         }
       }
+      .table_name_list:hover{
+        background:rgba(36,57,75,1);
+      }
     }
     .table_name::-webkit-scrollbar {
       display: none;
@@ -424,7 +428,7 @@ export default {
       padding: 0 12px;
     }
     .tab_text1{
-      min-width: 59px;
+      min-width: 45px;
       width: 100%;
     }
     .tab_text2{
@@ -436,11 +440,11 @@ export default {
       width: 100%;
     }
     .tab_text4{
-      min-width: 82px;
+      min-width: 75px;
       width: 100%;
     }
     .tab_text5{
-      min-width: 83px;
+      min-width: 77px;
       width: 100%;
     }
     .tab_text6{
@@ -448,7 +452,7 @@ export default {
       width: 100%;
     }
     .tab_text7{
-      min-width: 62px;
+      min-width: 105px;
       width: 100%;
     }
   }

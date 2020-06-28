@@ -66,7 +66,7 @@
         <div class="sharesBasics">
           <div class="nameCode">{{stockBasis.code}} {{stockBasis.name}}</div>
           <div :class="stockBasis.diff_money>0?'priceRange red':'priceRange green'">{{stockBasis.nowPrice}} {{stockBasis.diff_money}} {{stockBasis.diff_rate}}%</div>
-          <div class="addOptional">+ 添加自选</div>
+          <!-- <div class="addOptional">+ 添加自选</div> -->
         </div>
         <div class="mainIndicators">
           <div class="mainIndicators_title">

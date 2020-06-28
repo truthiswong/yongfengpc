@@ -32,7 +32,7 @@
         <div>
           <div style="display:flex">
             <img src="../../../assets/addBtn.png" alt="" class="btnImg" @click="addReduceBtnCLick(3)">
-            <Input placeholder="--" style="width: 213px" disabled v-model="share1" id="marginTradingInput" @on-change="sharesChange"/>
+            <Input placeholder="--" style="width: 213px"  v-model="share1" id="marginTradingInput" @on-change="sharesChange"/>
             <img src="../../../assets/reduceBtn.png" alt="" class="btnImg" @click="addReduceBtnCLick(4)">
           </div>
           <div style="width:100%;margin-top:4px">
@@ -136,10 +136,40 @@
         <div class="title_text text1">本金 {{list.principal}}</div>
         <div class="title_text text2">服务费 {{list.serviceCharge}}</div>
         <div class="title_text14500 text3">需支付：{{list.payment}}元</div>
-        <Button type="info" class="bnt1" :disabled="confirm" :loading="btnloading" @click="btnEntrust">融券(少)</Button>
+        <Button type="info" class="bnt1" :disabled="confirm" @click="modal = true">融券(少)</Button>
       </div>
     </div>
   </div>
+  <Modal v-model="modal"  id="withdrawalModel" width="440" :mask-closable='false' @on-visible-change="modalChange">
+    <div class="modalList" slot="footer">
+      <div class="modalTitle">请确认您的交易信息：</div>
+      <div class="modalContent">
+        <div class="modalContent_list">
+          <div class="modalContent_list_title">股票名（代码）</div>
+          <div class="modalContent_list_content">{{sharesDetail.name}}  ( {{sharesDetail.code}} )</div>
+        </div>
+        <div class="modalContent_list">
+          <div class="modalContent_list_title">单价</div>
+          <div class="modalContent_list_content">{{sharesDetail.nowPrice}}</div>
+        </div>
+        <div class="modalContent_list">
+          <div class="modalContent_list_title">交易量</div>
+          <div class="modalContent_list_content">{{share1}}</div>
+        </div>
+        <div class="modalContent_list">
+          <div class="modalContent_list_title">名义本金 </div>
+          <div class="modalContent_list_content">{{list.principal}}</div>
+        </div>
+        <div class="modalContent_list">
+          <div class="modalContent_list_title">实际本金</div>
+          <div class="modalContent_list_content">{{list.payment}}</div>
+        </div>
+        <div class="modalContent_list" style="justify-content:flex-end">
+          <Button type="info" class="bnt1" size="small"  :loading="btnloading" @click="btnEntrust">确认融券(少)</Button>
+        </div>
+      </div>
+    </div>
+  </Modal>
 </div>
 </template>
 <script>
@@ -147,6 +177,7 @@ import { getStockSearch, getStockDetail, getExchangeVolume, getExchangeCommissio
 export default {
   data () {
     return {
+      modal: false,
       search: '', //  搜索内容
       btn_num: 'all', // 份额
       loading: false, // loding
@@ -229,7 +260,6 @@ export default {
           this.searchList = res.data
           this.loading = false;
         }).catch(err => {
-          console.log(err);
           if (err.response) {
           this.$Message.error(err.response.data.message)
         } else {
@@ -266,7 +296,6 @@ export default {
         const arr = res.data
         this.sharesDetail = arr
         this.tradingVolume(key)
-        console.log(arr);
       }).catch(err => {
         if (err.response) {
           this.$Message.error(err.response.data.message)
@@ -301,7 +330,6 @@ export default {
           this.confirm = true
         }
       }).catch(err => {
-        console.log(err)
         this.$Message.error('请先选择股票')
       })
     },
@@ -317,7 +345,6 @@ export default {
         this.list.serviceCharge = res.data.charge
         this.list.payment = (Number(this.list.principal) + Number(this.list.serviceCharge)).toFixed(0)
       }).catch(err => {
-        console.log(err)
         this.$Message.error('请先选择股票')
       })
     },
@@ -350,6 +377,7 @@ export default {
       }
       getExchangeEntrust(data).then(res => {
         this.btnloading = false
+        this.modal = false
         this.$Message.success('购买成功')
         if (this.ascriptionType === 1 || this.ascriptionType === '1') {
           this.$emit('securitiesLendingFinancing', '3')
@@ -397,6 +425,12 @@ export default {
           this.share1 = parseInt(this.share1) + 1000
         }
         this.tradingVolume()
+      }
+    },
+    // 弹窗关闭
+    modalChange(key) {
+      if (key == false) {
+        this.btnloading = false
       }
     },
     // 返回
@@ -575,6 +609,44 @@ export default {
       right: 15px;
       bottom: 20px;
       // background: #E33531;
+    }
+  }
+}
+.modalList{
+  width: 100%;
+  height: 312px;
+  padding: 30px 32px 20px 32px;
+  background:rgba(36,44,55,1);
+  .modalTitle{
+    height: 47px;
+    width:100%;
+    font-size:14px;
+    font-family:PingFangSC-Medium,PingFang SC;
+    font-weight:500;
+    color:rgba(240,140,38,1);
+    border-bottom: 1px solid rgba(48,59,75,1);
+    text-align: left;
+  }
+  .modalContent{
+    width: 100%;
+    height: 235px;
+    padding-top: 6px;
+    .modalContent_list{
+      display: flex;
+      margin-top:14px;
+      font-size:12px;
+      font-family:PingFangSC-Regular,PingFang SC;
+      .modalContent_list_title{
+        width: 152px;
+        font-weight:500;
+        color:rgba(222,221,221,1);
+        text-align: left;
+      }
+      .modalContent_list_content{
+        font-weight:400;
+        text-align: left;
+        color:rgba(203,205,211,1);
+      }
     }
   }
 }

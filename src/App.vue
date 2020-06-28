@@ -25,6 +25,12 @@ html,body {
 .orange {
   color: #F08C26;
 }
+.red_back{
+  background:rgba(227,53,49,1);
+}
+.bule_back{
+  background:rgba(33,141,242,1);
+}
 .cursor{
   cursor: pointer
 }
