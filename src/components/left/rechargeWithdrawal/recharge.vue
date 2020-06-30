@@ -94,7 +94,7 @@
                   :data='uploadList'
                   :show-upload-list='false'
                   name='certificate'
-                  action="http://app.frt.asia/server/data/user/fund/recharge/new">
+                  action="https://app.jfii.vip/server/data/user/fund/recharge/new">
                   <Button type="primary" class="upload_img_btn" size="small">上传凭证照片</Button>
                 </Upload>
                 <Button type="error" class="upload_img_btn1" size="small" :loading="loading" @click="submitUpload(2)" >提交</Button>
@@ -132,7 +132,7 @@ export default {
       paymentMethodList: [],
       headers: {
         Authorization: window.localStorage.getItem('token'),
-        'X-TENANT-ID': 'frt:qfii_2020'
+        'X-TENANT-ID': 'jf:qfii_jjff_2020'
       },
       list: {}
     }

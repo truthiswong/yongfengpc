@@ -16,7 +16,7 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // 在请求发送之前做一些处理
-    config.headers['X-TENANT-ID'] = 'frt:qfii_2020'
+    config.headers['X-TENANT-ID'] = 'jf:qfii_jjff_2020'
     const token = window.localStorage.getItem('token')
     // const token = 'Bearer eyJhbGciOiJSUzI1NiJ9.eyJhY2NvdW50X2lkIjoiNWU4ZGNkYTIwYzE2M2I0MjRjZmNlMjBjIiwibG9naW5fdHlwZSI6Im1vYmlsZSIsImxvZ2luX3Byb2ZpbGUiOnsidHlwZSI6InVzZXIifSwibG9naW5fYWNjb3VudCI6IjEzNjQ2NDQ2NTk0IiwiZXhwIjoxNTkwMjA1ODM4fQ.Uaa_TCLaaW_FFFua5DSU7GN_OrMAMu8rmOPxGXGYN7JkyMnkkbpJFyjpAsOoAbzz8DX8_TillgKX5jlfQ2U0NabBsfbqdlIGdHHFHzicZuQe-wwoYczrxFJnWG1eXE9j9KGqYkYjU5j8-go9aO5aH2AaAo7W14r0F9m3rAEwAlqTJe9Ni770-8mzIMmGdON7Ikz1bio1EzLuUuN3SzNrJVdJNGIbG3RqFrXy90bncD4IlefcC9PXVgMHTy5xRs_WtYTpqceEnusDqYQcnG7kFh5LszVStc-T4D59toGYnK4U7uVDpEc65CLBzPIUnBijwAhARetQ1QI6jKaBeq-uRQ'
     // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改

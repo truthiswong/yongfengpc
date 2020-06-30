@@ -1,6 +1,5 @@
 import request from '@/utils/axios'
-const VUE_APP_BASE_API = 'http://app.frt.asia/server/'
-const VUE_APP_BASE_API1 = 'https://trade.frt.asia/server/'
+const VUE_APP_BASE_API = 'https://app.jfii.vip/server/'
 // 获取验证码
 export function getVerificationCode (data) {
   return request({
