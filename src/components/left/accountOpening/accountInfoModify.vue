@@ -33,7 +33,7 @@
                 ref="upload"
                 :show-upload-list='false'
                 name='a'
-                action="http://app.frt.asia/server/data/user/upload/idcarda">
+                action="https://app.jfii.vip/server/data/user/upload/idcarda">
                 <Button type="primary" class="upload_img_btn" size="small" :loading="loading1">上传凭证照片</Button>
               </Upload>
             </div>
@@ -48,7 +48,7 @@
                 ref="upload"
                 :show-upload-list='false'
                 name='b'
-                action="http://app.frt.asia/server/data/user/upload/idcardb">
+                action="https://app.jfii.vip/server/data/user/upload/idcardb">
                 <Button type="primary" class="upload_img_btn" size="small" :loading="loading2">上传凭证照片</Button>
               </Upload>
             </div>
@@ -87,7 +87,7 @@
                 ref="upload"
                 :show-upload-list='false'
                 name='card'
-                action="http://app.frt.asia/server/data/user/bank/upload/bankcard">
+                action="https://app.jfii.vip/server/data/user/bank/upload/bankcard">
                 <Button type="primary" class="upload_img_btn" size="small" :loading="loading3">上传凭证照片</Button>
               </Upload>
             </div>
@@ -131,7 +131,7 @@ export default {
       img2: '', // 银行卡
       headers: {
         Authorization: window.localStorage.getItem('token'),
-        'X-TENANT-ID': 'frt:qfii_2020'
+        'X-TENANT-ID': 'jf:qfii_jjff_2020'
       },
       list: {
         name: '',

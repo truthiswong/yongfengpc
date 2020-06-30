@@ -28,7 +28,7 @@ module.exports = {
             mac: {
                 icon: './public/app.png'
             },
-            productName: '永丰'
+            productName: 'JF QFII'
         }
     }
   }
