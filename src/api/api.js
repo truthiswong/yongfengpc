@@ -245,7 +245,7 @@ export function transferaccount () {
 // 充值
 export function rechargeNew (data) {
   return request({
-    url: VUE_APP_BASE_API1 + 'data/user/fund/recharge/new',
+    url: VUE_APP_BASE_API + 'data/user/fund/recharge/new',
     method: 'post',
     data
   })
@@ -253,7 +253,7 @@ export function rechargeNew (data) {
 // 账户认证信息
 export function bankDetail (data) {
   return request({
-    url: VUE_APP_BASE_API1 + 'data/user/bank/detail',
+    url: VUE_APP_BASE_API + 'data/user/bank/detail',
     method: 'post',
     data
   })
@@ -261,7 +261,7 @@ export function bankDetail (data) {
 // 实名认证
 export function bankVerify (data) {
   return request({
-    url: VUE_APP_BASE_API1 + 'data/user/bank/verify',
+    url: VUE_APP_BASE_API + 'data/user/bank/verify',
     method: 'post',
     data
   })
@@ -270,14 +270,14 @@ export function bankVerify (data) {
 // 分时图
 export function stockTsharing (code) {
   return request({
-    url: VUE_APP_BASE_API1 + 'data/open/stock/tsharing/' + code,
+    url: VUE_APP_BASE_API + 'data/open/stock/tsharing/' + code,
     method: 'post',
   })
 }
 // K线
 export function stockKline (data) {
   return request({
-    url: VUE_APP_BASE_API1 + 'data/open/stock/kline/' + data.code,
+    url: VUE_APP_BASE_API + 'data/open/stock/kline/' + data.code,
     method: 'post',
     data: {
       beginDay: data.beginDay,
@@ -289,14 +289,14 @@ export function stockKline (data) {
 // 个人信息
 export function userCurrent () {
   return request({
-    url: VUE_APP_BASE_API1 + 'data/user/current',
+    url: VUE_APP_BASE_API + 'data/user/current',
     method: 'post'
   })
 }
 // 修改密码
 export function userPasswd (data) {
   return request({
-    url: VUE_APP_BASE_API1 + 'sso/self/passwd',
+    url: VUE_APP_BASE_API + 'sso/self/passwd',
     method: 'post',
     data
   })
