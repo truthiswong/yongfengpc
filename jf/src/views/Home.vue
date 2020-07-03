@@ -9,19 +9,21 @@
       </div>
     </div>
     <Logoin ref="logoin"></Logoin>
-    <SetUp ref="setUp"></SetUp>
+    <SetUp ref="setUp" @privacyStatementTrue="privacyStatementClick"></SetUp>
+    <PrivacyStatement ref="privacyStatement"></PrivacyStatement>
   </div>
 </template>
 
 <script>
 import Logoin from '../components/logoin/logoin'
 import SetUp from '../components/topModal/setUp' // 设置弹窗
+import PrivacyStatement from '../components/topModal/privacyStatement' // 设置弹窗
 import HeaderTop from '../components/HeaderTop'
 import MenuLeft from '../components/MenuLeft'
 import HeaderBottom from '../components/HeaderBottom'
 export default {
   name: 'Home',
-  components: {MenuLeft, HeaderTop, HeaderBottom, Logoin, SetUp},
+  components: {MenuLeft, HeaderTop, HeaderBottom, Logoin, SetUp, PrivacyStatement},
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
@@ -45,6 +47,11 @@ export default {
         this.$refs.setUp.getList()
       }
       
+    },
+    privacyStatementClick() {
+      console.log(1);
+      
+      this.$refs.privacyStatement.getList()
     },
     searchClick(code) {
       this.$router.push({ 

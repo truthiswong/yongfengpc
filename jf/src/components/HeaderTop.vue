@@ -14,7 +14,7 @@
       </div>
       <div class="cursor" @click="logoin('2')">
         <img src="../assets/setUp.png" alt="" style="width:14px;height:14px">
-        <span>设置</span>
+        <span>开户</span>
       </div>
     </div>
     <div class="logoin cursor" @click="logoin('1')" v-else>

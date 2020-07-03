@@ -7,7 +7,7 @@ import 'view-design/dist/styles/iview.css';
 import './styles/index.less';
 Vue.use(ViewUI);
 Vue.config.productionTip = false
-
+console.log(process.env.CSC_LINK);
 new Vue({
   router,
   store,

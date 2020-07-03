@@ -3,7 +3,7 @@ const path = require('path');
 function resolve (dir) {
   return path.join(__dirname, dir);
 }
-
+console.log(process.env.CSC_LINK);
 module.exports = {
   publicPath: './',
   lintOnSave: false,

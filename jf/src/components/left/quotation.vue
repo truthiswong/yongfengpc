@@ -240,12 +240,21 @@ export default {
       const data = {}
       if (this.tabBar == '1') {
         data.markets = 'sh,sz',
-        data.limit = '150'
+        data.limit = '500'
+        if (JSON.parse(window.localStorage.getItem('shSzList'))) {
+          this.list = JSON.parse(window.localStorage.getItem('shSzList'))
+        }
       } else if(this.tabBar == '2') {
         data.markets = 'hk',
         data.limit = '150'
+        if (JSON.parse(window.localStorage.getItem('hkList'))) {
+          this.list = JSON.parse(window.localStorage.getItem('hkList'))
+        }
       } else if(this.tabBar == '3') {
         data.showprice = 1
+        if (JSON.parse(window.localStorage.getItem('zxList'))) {
+          this.list = JSON.parse(window.localStorage.getItem('zxList'))
+        }
       }
       if (this.tabBar == '1' || this.tabBar == '2') {
         getHotExchange(data).then(res => {
@@ -253,7 +262,12 @@ export default {
           arr.forEach(v => {
             v.aa = ((v.diff_money/v.closePrice)*100).toFixed(2) 
           });
-          
+          if (this.tabBar == '1') {
+            window.localStorage.setItem('shSzList', JSON.stringify(arr))
+          }
+          if (this.tabBar == '2') {
+            window.localStorage.setItem('hkList', JSON.stringify(arr))
+          }
           this.list = arr
         })
       } else {
@@ -262,6 +276,7 @@ export default {
           arr.forEach(v => {
             v.aa = ((v.diff_money/v.closePrice)*100).toFixed(2) 
           });
+          window.localStorage.setItem('zxList', JSON.stringify(arr))
           this.list = arr
           // this.optionalList = arr
         }).catch(err => {
@@ -277,6 +292,7 @@ export default {
     // tab切换
     tabClick(key) {
       this.tabBar = key
+      this.list = []
       this.getList()
       if (this.aaa) {
         clearInterval(this.aaa)

@@ -34,7 +34,7 @@
                 :show-upload-list='false'
                 name='a'
                 action="https://app.jfii.vip/server/data/user/upload/idcarda">
-                <Button type="primary" class="upload_img_btn" size="small" :loading="loading1">上传凭证照片</Button>
+                <Button type="primary" class="upload_img_btn" size="small" :loading="loading1">上传身份证正面照</Button>
               </Upload>
             </div>
             <div class="flex_space-between steps_1_list" style="margin-top:11px">
@@ -49,7 +49,7 @@
                 :show-upload-list='false'
                 name='b'
                 action="https://app.jfii.vip/server/data/user/upload/idcardb">
-                <Button type="primary" class="upload_img_btn" size="small" :loading="loading2">上传凭证照片</Button>
+                <Button type="primary" class="upload_img_btn" size="small" :loading="loading2">上传身份证反面照</Button>
               </Upload>
             </div>
             <div style="text-align: center;margin-top:30px">
@@ -88,7 +88,7 @@
                 :show-upload-list='false'
                 name='card'
                 action="https://app.jfii.vip/server/data/user/bank/upload/bankcard">
-                <Button type="primary" class="upload_img_btn" size="small" :loading="loading3">上传凭证照片</Button>
+                <Button type="primary" class="upload_img_btn" size="small" :loading="loading3">上传银行卡正面照</Button>
               </Upload>
             </div>
             <div style="text-align: center;margin-top:30px">

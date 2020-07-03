@@ -258,6 +258,7 @@ export default {
       stockBasis: {
       },
       beginDay: '',
+      kLineType: '1'
     }
   },
   watch: {
@@ -276,7 +277,6 @@ export default {
       this.getStockPriceList()
     }
     this.getStockDetailList(1)
-    this.getKList(1)
     this.aaa = setInterval(this.getStockDetailList,3000)
     // this.bbb = setInterval(this.getKList,3000)
   },
@@ -291,6 +291,10 @@ export default {
         arr.currcapital = (arr.currcapital).toFixed(0)
         this.stockBasis = arr
         this.spinShow1 = false
+        if (this.kLineType == '1') {
+          this.kLineType = '2'
+          this.getKList(1)
+        }
       }).catch(err => {
         this.spinShow1 = false
         if (err.response) {
@@ -376,6 +380,7 @@ export default {
           
           this.spinShow = false
         }).catch(err => {
+          console.log(err);
           this.spinShow = false
           document.getElementById('kList').innerHTML = ''
           if (err.response) {

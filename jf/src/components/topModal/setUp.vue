@@ -45,7 +45,7 @@
         </div> -->
         <div class="list_tab top24">
           <span class="name">协议及隐私声明</span>
-          <span class="content" style="color:#4A90E2" >《协议及隐私声明书》</span>
+          <span class="content" style="color:#4A90E2" @click="privacyStatementClick">《协议及隐私声明书》</span>
         </div>
       </div>
     </Modal>
@@ -105,6 +105,9 @@ export default {
       } else {
         this.$Message.error('请全部输入')
       }
+    },
+    privacyStatementClick() {
+      this.$emit('privacyStatementTrue', '1')
     },
     signOutLogin() {
       window.localStorage.setItem('loginType', false)

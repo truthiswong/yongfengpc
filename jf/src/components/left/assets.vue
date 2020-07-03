@@ -6,7 +6,7 @@
           <div class="my">
             <div class="my_title">我的资产</div>
             <div class="my_CardNumber" v-show="type==true || type=='true'">
-              <div v-show="assetsList.accountNo==''">（亲爱的用户您还没有开户，请前往<span class="opening">开户</span> 吧～）</div>
+              <div v-show="assetsList.accountNo==''">（亲爱的用户您还没有开户，请前往<span class="opening" @click="accountInfoCLick">开户</span> 吧～）</div>
               <div v-show="assetsList.accountNo!=''" class="cursor" @click="accountInfoCLick">（开户银行卡 {{assetsList.accountNo}}）</div>
             </div>
             <div class="my_text1" @click="withdrawalRechargeClick(1)">充值</div>
