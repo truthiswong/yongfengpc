@@ -7,11 +7,11 @@
     </div>
     <div class="title_text list list2">
       <div class="title">手机号</div>
-      <Input placeholder="请输入手机号码" style="width: 220px"  v-model="list.account"/>
+      <Input placeholder="请输入手机号码" style="width: 220px"  v-model="list.name"/>
     </div>
     <div class="title_text list list3">
       <div class="title">密码</div>
-      <Input placeholder="请输入密码" type="password" style="width: 220px" v-model="list.password"/>
+      <Input placeholder="请输入密码" type="password" style="width: 220px" v-model="list.code"/>
     </div>
     <!-- <div class="list list4">
       <Checkbox>自动登录</Checkbox>
@@ -21,12 +21,10 @@
     </div>
     <div class="list list6">
       <span class="cursor" @click="typeClick(4)">立即注册</span>
-      <span class="cursor" @click="typeClick(3)">忘记密码</span>
     </div>
   </div>
 </template>
 <script>
-import { getLogin } from '@/api/api';
 export default {
   name: 'passwordLogin',
   components: {},
@@ -34,9 +32,8 @@ export default {
     return {
       loading: false,
       list: {
-        account: '',
-        password: '',
-        profile: 'type:user'
+        name: '',
+        code: ''
       }
     }
   },
@@ -49,34 +46,15 @@ export default {
     },
     logoinClick() {
       this.loading = true
-      if (this.list.account === '') {
+      if (this.list.name === '') {
         this.$Message.error('请输入手机号');
         this.loading = false
-      } else if (this.list.password === '') {
+      } else if (this.list.code === '') {
         this.$Message.error('请输入密码');
         this.loading = false
       } else {
-        getLogin(this.list).then(res => {
-          this.$Message.success('登录成功');
-          window.localStorage.setItem('token', 'Bearer ' + res.data.token)
-          window.localStorage.setItem('loginType', true)
-          this.emptyData()
-          this.$emit('loginSuccess', '1')
-          window.location.reload()
-        }).catch(err => {
-          if (err.response) {
-            this.$Message.error(err.response.data.message)
-          } else {
-            this.$Message.error('请求超时,请重试')
-          }
-          this.loading = false
-        })
+
       }
-    },
-    emptyData() {
-      this.list.account = ''
-      this.list.password = ''
-      this.loading = false
     },
     quickLogoin() {
       this.$Message.error('暂不可用');
@@ -122,14 +100,11 @@ export default {
     top: 287px;
   }
   .list6{
-    width: 220px;
     top: 335px;
     font-size:12px;
     font-family:PingFangSC-Regular,PingFang SC;
     font-weight:400;
     color:rgba(50,50,50,1);
-    display: flex;
-    justify-content: space-between;
   }
   .title{
     color:rgba(50,50,50,1);

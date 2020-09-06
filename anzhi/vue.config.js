@@ -21,24 +21,15 @@ module.exports = {
   },
   pluginOptions: {
     electronBuilder: {
-      builderOptions: {
-          win: {
-            icon: './public/app.ico',
-            target: [
-              {
-                "target": "nsis",//利用nsis制作安装程序
-                "arch": [
-                    "x64",//64位
-                    "ia32"//32位
-                ]
-              }
-            ]
-          },
-          mac: {
-              icon: './public/app.png'
-          },
-          productName: 'JF QFII'
-      },
+        builderOptions: {
+            win: {
+                icon: './public/app.ico'
+            },
+            mac: {
+                icon: './public/app.png'
+            },
+            productName: '安智QFII'
+        }
     }
   }
 };

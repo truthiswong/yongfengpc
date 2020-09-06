@@ -21,7 +21,6 @@
     </div>
     <div class="list list6">
       <span class="cursor" @click="typeClick(4)">立即注册</span>
-      <span class="cursor" @click="typeClick(3)">忘记密码</span>
     </div>
   </div>
 </template>
@@ -65,10 +64,10 @@ export default {
           window.location.reload()
         }).catch(err => {
           if (err.response) {
-            this.$Message.error(err.response.data.message)
-          } else {
-            this.$Message.error('请求超时,请重试')
-          }
+          this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
           this.loading = false
         })
       }
@@ -122,14 +121,11 @@ export default {
     top: 287px;
   }
   .list6{
-    width: 220px;
     top: 335px;
     font-size:12px;
     font-family:PingFangSC-Regular,PingFang SC;
     font-weight:400;
     color:rgba(50,50,50,1);
-    display: flex;
-    justify-content: space-between;
   }
   .title{
     color:rgba(50,50,50,1);

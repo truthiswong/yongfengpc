@@ -2,9 +2,12 @@
   <div class="login">
     <div class="list list1 cursor" style="display:flex" @click="typeClick(1)">
       <Icon type="ios-arrow-back" size="12px" style="margin-top:4px"/>
-      忘记密码
+      手机注册
     </div>
     <Form :model="list" label-position="top" style="text-align: left;" id="registerForm" class="list list2"  ref="formValidate" :rules="ruleValidate">
+      <FormItem label="机构邀请码" prop="cardNumber">
+        <Input v-model="list.cardNumber" />
+      </FormItem>
       <FormItem label="手机号" prop="account">
         <Input v-model="list.account"/>
       </FormItem>
@@ -14,20 +17,20 @@
           <Button :disabled="btnDisabled" class="codeBtn cursor" type="primary" @click="codeClick">{{smsText}}</Button>
         </div>
       </FormItem>
-      <FormItem label="新密码密码" prop="password">
+      <FormItem label="密码" prop="password">
         <Input type="password" v-model="list.password"/>
       </FormItem>
       <FormItem label="确认密码" prop="password1">
         <Input type="password" v-model="list.password1"/>
       </FormItem>
       <FormItem style="margin-top:25px">
-        <Button type="error" style="width:220px;" :loading="loading" @click="logoinClick('formValidate')">重置密码</Button>
+        <Button type="error" style="width:220px;" :loading="loading" @click="logoinClick('formValidate')">立即注册</Button>
       </FormItem>
     </Form>
   </div>
 </template>
 <script>
-import { getVerificationCode, getResetPassword } from '@/api/api';
+import { getVerificationCode, getAgentValid, getAgentBind, getRegister } from '@/api/api';
 export default {
   name: 'passwordLogin',
   components: {},
@@ -38,12 +41,16 @@ export default {
       smsText: '获取验证码',
       btnDisabled: false,
       list: {
+        cardNumber: '',
         account: '',
         code: '',
         password: '',
         password1: ''
       },
       ruleValidate: {
+        cardNumber: [
+          { required: true, message: '机构邀请码不能为空', trigger: 'blur' }
+        ],
         account: [
           { required: true, message: '手机号不能为空', trigger: 'blur' }
         ],
@@ -73,7 +80,6 @@ export default {
       this.loading = true;
     },
     typeClick(key) {
-      this.emptyData()
       this.$emit('switchingMode', key)
     },
     logoinClick(name) {
@@ -82,22 +88,47 @@ export default {
         if (valid) {
           if (this.list.password === this.list.password1) {
             const data = {
-              type:'mobile',
-              account: this.list.account,
-              password: this.list.password1,
-              code: this.list.code,
-              profile: 'type:user'
+              agentCode: this.list.cardNumber
             }
-            getResetPassword(data).then(res=>{
-              this.emptyData()
-              this.$Message.success('重置成功');
-              this.loading = false
+            getAgentValid(data).then(res => {
+              const data1 = {
+                agentCode: this.list.cardNumber,
+                mobile: this.list.account,
+                authcode: this.list.code
+              }
+              getAgentBind(data1).then(res => {
+                const data2 = {
+                  account: this.list.account,
+                  code: this.list.code,
+                  password: this.list.password,
+                  profile: 'type:user',
+                  type: 'mobile'
+                }
+                getRegister(data2).then(res => {
+                  this.$Message.success('注册成功');
+                  this.emptyData()
+                }).catch(err => {
+                  if (err.response) {
+          this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
+                  this.loading = false
+                })
+              }).catch(err => {
+                if (err.response) {
+          this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
+                this.loading = false
+              })
             }).catch(err => {
               if (err.response) {
-                this.$Message.error(err.response.data.message)
-              } else {
-                this.$Message.error('请求超时,请重试')
-              }
+          this.$Message.error(err.response.data.message)
+        } else {
+          this.$Message.error('请求超时,请重试')
+        }
               this.loading = false
             })
           } else {
@@ -148,6 +179,7 @@ export default {
     },
     // 清空数据
     emptyData() {
+      this.list.cardNumber = ''
       this.list.account = ''
       this.list.password = ''
       this.list.account = ''
